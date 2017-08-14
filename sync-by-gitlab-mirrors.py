@@ -62,7 +62,7 @@ def add_remote_repo():
     getConfig = GetConfigFromRemote()
     git_project = getConfig.get_xml_value("remote", "fetch")
     project = getConfig.get_xml_value("project")
-    add_script = os.path.join(gitlab_mirrors_path,"add_mirror.sh")
+    add_script = os.path.join(gitlab_mirrors_path,add_gitlab_mirrors_name)
     git_url = git_project.split("//")[-1].replace("/", ":")
     for name in project:
         path = project[name]
