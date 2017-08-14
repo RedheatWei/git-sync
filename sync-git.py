@@ -62,7 +62,7 @@ def clone_remote_repo(config):
     for name in project:
         path = project[name]
         project_path = os.path.join(remote_to_save_repo,path)
-        git_url = "//".split(git_project)[-1].replace("/",":")
+        git_url = git_project.split("//")[-1].replace("/",":")
         remote_path = git_url+"/"+path+".git"
         if os.path.exists(project_path):
             shutil.rmtree(project_path)
