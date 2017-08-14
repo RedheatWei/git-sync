@@ -28,15 +28,26 @@ def clone_sync_file():
         print "clone %s to %s successfully!" % (sync_file_project,sync_tmp_file)
         return xml.dom.minidom.parse(os.path.join(sync_tmp_file,sync_file_branch))
 
-def get_single_xml_value(config_obj,tagName,attribute):
+def get_xml_value(config_obj,tagName,attribute=None):
     doc = config_obj.documentElement
-    print len(doc.getElementsByTagName(tagName))
-    tag_obj = doc.getElementsByTagName(tagName)[0]
-    return  tag_obj.getAttribute(attribute)
+    tag_objs = doc.getElementsByTagName(tagName)
+    tag_number = len(tag_objs)
+    if tag_number > 1:
+        obj_list = {}
+        for obj in tag_objs:
+            obj_list[obj.getAttribute("name")] = obj.getAttribute("path")
+        return obj_list
+    else:
+        tag_obj = doc.getElementsByTagName(tagName)[0]
+        value = tag_obj.getAttribute(attribute)
+        return  value
 
 # 读取配置文件
 config = clone_sync_file()
-git_project = get_single_xml_value(config,"remote","fetch")
-branch = get_single_xml_value(config,"default","revision")
-remote = get_single_xml_value(config,"default","remote")
+git_project = get_xml_value(config,"remote","fetch")
+branch = get_xml_value(config,"default","revision")
+remote = get_xml_value(config,"default","remote")
+
+project = get_xml_value(config,"project")
+print project
 
