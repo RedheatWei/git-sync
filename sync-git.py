@@ -66,12 +66,13 @@ def clone_remote_repo(config):
         if os.path.exists(project_path):
             shutil.rmtree(project_path)
         try:
-            print "clone project %s start!" % name
-            Gittle.clone(remote_path, project_path)
-        except Exception,e:
             print  1
-            print e
+            print "clone project %s start!" % name
             print 2
+            Gittle.clone(remote_path, project_path)
+            print 3
+        except Exception,e:
+            print e
         else:
             print "%s clone to %s successfuly!" % (remote_path,project_path)
 
