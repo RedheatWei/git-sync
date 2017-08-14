@@ -57,17 +57,18 @@ def clone_remote_repo(config):
     # branch = get_xml_value(config, "default", "revision")
     # remote = get_xml_value(config, "default", "remote")
     project = get_xml_value(config, "project")
-    save_path = remote_to_save_repo
-    mkdir_safe(save_path)
+    # save_path = remote_to_save_repo
+    mkdir_safe(remote_to_save_repo)
     for name in project:
         path = project[name]
-        project_path = os.path.join(save_path,path)
+        project_path = os.path.join(remote_to_save_repo,path)
         remote_path = git_project+"/"+path+".git"
         if os.path.exists(project_path):
             shutil.rmtree(project_path)
         try:
             print "clone project %s start!" % name
-            Gittle.clone(remote_path, project_path,bare=True)
+            print  remote_path
+            Gittle.clone(remote_path,project_path,bare=True)
         except Exception,e:
             print e
         else:
