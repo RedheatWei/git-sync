@@ -125,7 +125,7 @@ class CloneToLocal(object):
         shell.wait()
     def _update_local(self,local_orgin_path,origin_uri):
         repo = Gittle(local_orgin_path, origin_uri=origin_uri)
-        repo.pull()
+        print repo.pull()
 
 # repo_rsyc = RepoSync()
 # repo_rsyc.add_remote_repo()
