@@ -15,6 +15,15 @@ sync_file_project = "git@10.240.205.131:thinkcloud_ci/manifests.git"
 sync_file_branch = "thinkcloud_ci_master.xml"
 sync_tmp_file = "/tmp/sync_file"
 
+remote_to_save_repo = "/data/shanghai_thinkcloud_ci/thinkcloud_ci_"
+
+
+def mkdir_safe(path):
+    if path and not(os.path.exists(path)):
+        os.makedirs(path)
+    return path
+
+
 #下载 manifests
 def clone_sync_file():
     try:
@@ -42,12 +51,24 @@ def get_xml_value(config_obj,tagName,attribute=None):
         value = tag_obj.getAttribute(attribute)
         return  value
 
-# 读取配置文件
+
+def clone_remote_repo(config):
+    git_project = get_xml_value(config, "remote", "fetch")
+    branch = get_xml_value(config, "default", "revision")
+    remote = get_xml_value(config, "default", "remote")
+    project = get_xml_value(config, "project")
+    for name,path in project:
+        save_path = remote_to_save_repo+branch
+        mkdir_safe(save_path)
+        project_path = os.path.join(save_path,path)
+        remote_path = git_project+"/"+path+".git"
+        try:
+            print "clone project %s start!" % name
+            Gittle.clone(remote_path, project_path,bare=branch)
+        except Exception,e:
+            print e
+        else:
+            print "%s clone to %s successfuly!" % (remote_path,project)
+
 config = clone_sync_file()
-git_project = get_xml_value(config,"remote","fetch")
-branch = get_xml_value(config,"default","revision")
-remote = get_xml_value(config,"default","remote")
-
-project = get_xml_value(config,"project")
-print project
-
+clone_remote_repo(config)
