@@ -58,7 +58,7 @@ class GetConfigFromRemote(object):
             value = tag_obj.getAttribute(attribute)
             return value
 #创建目录
-    def mkdir_safe(path):
+    def mkdir_safe(self,path):
         if path and not (os.path.exists(path)):
             os.makedirs(path)
         return path
@@ -127,9 +127,9 @@ class CloneToLocal(object):
         repo = Gittle(local_orgin_path, origin_uri=origin_uri)
         repo.pull()
 
-repo_rsyc = RepoSync()
-repo_rsyc.add_remote_repo()
-repo_rsyc.update_remote_repo()
+# repo_rsyc = RepoSync()
+# repo_rsyc.add_remote_repo()
+# repo_rsyc.update_remote_repo()
 
 clone_to_local = CloneToLocal(local_code_path,local_code_prefix)
 clone_to_local.clone_code()
