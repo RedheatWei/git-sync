@@ -49,7 +49,7 @@ class GetConfigFromRemote(object):
         tag_objs = doc.getElementsByTagName(tagName)
         tag_number = len(tag_objs)
         if tag_number > 1:
-            obj_list = {}
+            obj_list = {"manifests":"manifests"}
             for obj in tag_objs:
                 obj_list[obj.getAttribute("name")] = obj.getAttribute("path")
             return obj_list
