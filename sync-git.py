@@ -63,6 +63,8 @@ def clone_remote_repo(config):
         path = project[name]
         project_path = os.path.join(save_path,path)
         remote_path = git_project+"/"+path+".git"
+        if os.path.exists(project_path):
+            shutil.rmtree(project_path)
         try:
             print "clone project %s start!" % name
             Gittle.clone(remote_path, project_path)
