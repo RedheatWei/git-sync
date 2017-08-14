@@ -69,6 +69,7 @@ def clone_remote_repo(config):
         except Exception,e:
             print  1
             print e
+            print 2
         else:
             print "%s clone to %s successfuly!" % (remote_path,project_path)
 
