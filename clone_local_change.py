@@ -64,6 +64,7 @@ def update_remote_repo():
     project = getConfig.get_xml_value("project")
     update_script = os.path.join(gitlab_mirrors_path,update_gitlab_mirrors_name)
     for name in project:
+        print name
         child1 = subprocess.Popen(["/bin/bash",update_script,name], stdout=subprocess.PIPE)
         child1.wait()
 
