@@ -65,6 +65,7 @@ def clone_remote_repo(config):
         remote_path = git_project+"/"+path+".git"
         try:
             print "clone project %s start!" % name
+            print  remote_path,project_path
             Gittle.clone(remote_path, project_path)
         except Exception,e:
             print e
