@@ -57,15 +57,14 @@ def clone_remote_repo(config):
     branch = get_xml_value(config, "default", "revision")
     remote = get_xml_value(config, "default", "remote")
     project = get_xml_value(config, "project")
+    save_path = remote_to_save_repo + branch
+    mkdir_safe(save_path)
     for name in project:
         path = project[name]
-        save_path = remote_to_save_repo+branch
-        mkdir_safe(save_path)
         project_path = os.path.join(save_path,path)
         remote_path = git_project+"/"+path+".git"
         try:
             print "clone project %s start!" % name
-            print  remote_path,project_path
             Gittle.clone(remote_path, project_path)
         except Exception,e:
             print e
