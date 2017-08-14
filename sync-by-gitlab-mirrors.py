@@ -18,8 +18,6 @@ remote_to_save_repo = "/data/shanghai_thinkcloud_ci_test/thinkcloud_ci"
 
 gitlab_mirrors_path = "/root/gitlab-mirrors"
 add_gitlab_mirrors_name = "add_mirror.sh"
-local_git_repo = "git@10.240.205.131:thinkcloud_test"
-
 
 def mkdir_safe(path):
     if path and not(os.path.exists(path)):
@@ -57,15 +55,18 @@ def get_xml_value(config_obj,tagName,attribute=None):
 #将远程代码同步到本地
 def add_remote_repo(config):
     git_project = get_xml_value(config, "remote", "fetch")
-    # branch = get_xml_value(config, "default", "revision")
-    # remote = get_xml_value(config, "default", "remote")
     project = get_xml_value(config, "project")
-    # save_path = remote_to_save_repo
     mkdir_safe(remote_to_save_repo)
     add_script = os.path.join(gitlab_mirrors_path,"add_mirror.sh")
+    git_url = git_project.split("//")[-1].replace("/", ":")
     for name in project:
-        cmd = "/bin/bash %s --git --project-name %s --mirror %s/%s.git" % (add_gitlab_mirrors_name,name,local_git_repo,project[name])
+        path = project[name]
+        remote_path_repo = git_url + "/" + path + ".git"
+        cmd = "/bin/bash %s --git --project-name %s --mirror %s/%s.git" % (add_script,name,remote_path_repo,path)
         getstatusoutput(cmd)
+
+    # branch = get_xml_value(config, "default", "revision")
+    # remote = get_xml_value(config, "default", "remote")
 
 config = clone_sync_file()
 add_remote_repo(config)
