@@ -15,7 +15,7 @@ sync_file_project = "git@10.240.205.131:thinkcloud_ci/manifests.git"
 sync_file_branch = "thinkcloud_ci_master.xml"
 sync_tmp_file = "/tmp/sync_file"
 
-remote_to_save_repo = "/data/shanghai_thinkcloud_ci/thinkcloud_ci_"
+remote_to_save_repo = "/data/shanghai_thinkcloud_ci_test/thinkcloud_ci_"
 
 
 def mkdir_safe(path):
