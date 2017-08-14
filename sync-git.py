@@ -27,5 +27,5 @@ def clone_sync_file():
         print "clone %s to %s successfully!" % (sync_file_project,sync_tmp_file)
         return xml.dom.minidom.parse(os.path.join(sync_tmp_file,sync_file_branch))
 
-config = clone_sync_file()
-print config.documentElement
+config = clone_sync_file().documentElement
+print config.remote.fetch
