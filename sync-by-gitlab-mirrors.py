@@ -29,7 +29,7 @@ class GetConfigFromRemote(object):
             self.sync_tmp_file = sync_tmp_file
 
     # 下载 manifests
-    def clone_sync_file(self):
+    def _clone_sync_file(self):
         try:
             if os.path.exists(self.sync_tmp_file):
                 shutil.rmtree(self.sync_tmp_file)
@@ -43,7 +43,7 @@ class GetConfigFromRemote(object):
 
     # 获取 xml配置文件
     def get_xml_value(self, tagName, attribute=None):
-        config_obj = self.clone_sync_file()
+        config_obj = self._clone_sync_file()
         doc = config_obj.documentElement
         tag_objs = doc.getElementsByTagName(tagName)
         tag_number = len(tag_objs)
