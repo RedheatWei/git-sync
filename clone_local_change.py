@@ -8,7 +8,7 @@ Email: qjyyn@qq.com
 
 import sys,os,shutil
 import xml.dom.minidom
-import subprocess
+import subprocess,time
 from gittle import Gittle
 
 gitlab_mirrors_path = "/root/gitlab-mirrors"
@@ -67,5 +67,5 @@ def update_remote_repo():
         print name
         child1 = subprocess.Popen(["/bin/bash",update_script,name], stdout=subprocess.PIPE)
         child1.wait()
-
+        time.sleep(10)
 update_remote_repo()
