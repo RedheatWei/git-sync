@@ -7,6 +7,8 @@ Email: qjyyn@qq.com
 '''
 import sys,os,shutil
 import xml.dom.minidom
+import subprocess
+
 from gittle import Gittle
 from commands import getstatusoutput
 
@@ -62,8 +64,10 @@ def add_remote_repo(config):
     for name in project:
         path = project[name]
         remote_path_repo = git_url + "/" + path + ".git"
-        cmd = "/bin/bash %s --git --project-name %s --mirror %s/%s.git" % (add_script,name,remote_path_repo,path)
-        getstatusoutput(cmd)
+        child1 = subprocess.Popen(["/bin/bash",add_script,"--git","--project-name",name,"--mirror",remote_path_repo,"/",path,".git"], stdout=subprocess.PIPE)
+        # cmd = "/bin/bash %s --git --project-name %s --mirror %s/%s.git" % (add_script,name,remote_path_repo,path)
+        # getstatusoutput(cmd)
+        print child1.stdout.readlines()
 
     # branch = get_xml_value(config, "default", "revision")
     # remote = get_xml_value(config, "default", "remote")
