@@ -67,6 +67,7 @@ def clone_remote_repo(config):
             print "clone project %s start!" % name
             Gittle.clone(remote_path, project_path)
         except Exception,e:
+            print  1
             print e
         else:
             print "%s clone to %s successfuly!" % (remote_path,project_path)
