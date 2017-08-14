@@ -129,8 +129,8 @@ class CloneToLocal(object):
         print repo.pull()
         print "pull %s end" % origin_uri
 
-# repo_rsyc = RepoSync()
-# repo_rsyc.add_remote_repo()
+repo_rsyc = RepoSync()
+repo_rsyc.add_remote_repo()
 # repo_rsyc.update_remote_repo()
 
 clone_to_local = CloneToLocal(local_code_path,local_code_prefix)
