@@ -10,6 +10,7 @@ Email: qjyyn@qq.com
 from gittle import Gittle
 sync_file_project = "git@10.240.205.131:thinkcloud_ci/manifests.git"
 sync_file_branch = "thinkcloud_ci_master.xml"
-sync_tmp_file = "/tmp"
+
+sync_tmp_file = "/tmp/sync_file"
 repo = Gittle.clone(sync_file_project,sync_tmp_file)
 print repo
