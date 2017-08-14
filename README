@@ -1,1 +1,4 @@
+install gitlab-mirrors
+https://github.com/samrocketman/gitlab-mirrors
+
 pip install gittle
