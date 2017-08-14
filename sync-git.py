@@ -36,7 +36,7 @@ def clone_sync_file():
     else:
         print "clone %s to %s successfully!" % (sync_file_project,sync_tmp_file)
         return xml.dom.minidom.parse(os.path.join(sync_tmp_file,sync_file_branch))
-
+#获取 xml配置文件
 def get_xml_value(config_obj,tagName,attribute=None):
     doc = config_obj.documentElement
     tag_objs = doc.getElementsByTagName(tagName)
@@ -51,13 +51,14 @@ def get_xml_value(config_obj,tagName,attribute=None):
         value = tag_obj.getAttribute(attribute)
         return  value
 
-
+#将远程代码下载到本地
 def clone_remote_repo(config):
     git_project = get_xml_value(config, "remote", "fetch")
     branch = get_xml_value(config, "default", "revision")
     remote = get_xml_value(config, "default", "remote")
     project = get_xml_value(config, "project")
-    for name,path in project:
+    for name in project:
+        path = project[name]
         save_path = remote_to_save_repo+branch
         mkdir_safe(save_path)
         project_path = os.path.join(save_path,path)
