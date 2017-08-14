@@ -65,11 +65,12 @@ def clone_remote_repo(config):
         remote_path = git_project+"/"+path+".git"
         try:
             print "clone project %s start!" % name
+
             Gittle.clone(remote_path, project_path,bare=branch)
         except Exception,e:
             print e
         else:
-            print "%s clone to %s successfuly!" % (remote_path,project)
+            print "%s clone to %s successfuly!" % (remote_path,project_path)
 
 config = clone_sync_file()
 clone_remote_repo(config)
