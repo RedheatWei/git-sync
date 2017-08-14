@@ -29,4 +29,4 @@ def clone_sync_file():
 
 config = clone_sync_file().documentElement
 remote = config.getElementsByTagName("remote")
-print remote
+print remote.getAttribute("fetch")
