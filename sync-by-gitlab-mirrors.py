@@ -141,7 +141,7 @@ class CloneToLocal(object):
         # shell = subprocess.Popen(["find %s" % manifests_path," -name '*.xml' | xargs sed 's@10.240.205.131/thinkcloud_ci@10.100.218.203/thinkcloud_test@g' -i"],stdout=subprocess.PIPE)
         # shell.wait()
         repo = Gittle(os.path.join(self.local_path,"manifests"), origin_uri=local_git_repo+"/manifests.git")
-        repo.push()
+        repo.push(branch_name="master")
         # shell2 = subprocess.Popen(["sed -i 's@10.240.205.131@10.100.218.203@g'",os.path.join(self.local_path,"building","config")+"/config-lenovo.yaml"],stdout=subprocess.PIPE)
         cmd = "sed -i 's@10.240.205.131@10.100.218.203@g' %s/config-lenovo.yaml" % os.path.join(self.local_path,"building","config")
         print cmd
@@ -158,7 +158,7 @@ class CloneToLocal(object):
         print cmd
         print getstatusoutput(cmd)
         repo = Gittle(os.path.join(self.local_path, "building"), origin_uri=local_git_repo + "/building.git")
-        repo.push()
+        repo.push(branch_name="master")
         # shell4 = subprocess.Popen("/root/bin/repo init -u",self.local_file_project,"-m",self.sync_file_branch)
         # shell4.wait()
 
