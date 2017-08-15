@@ -133,15 +133,16 @@ class CloneToLocal(object):
         print repo.pull()
         print "pull %s end" % origin_uri
     def change_local(self):
-        shell = subprocess.Popen(["find",os.path.join(self.local_path,"manifests")," -name '*.xml' | xargs sed 's@10.240.205.131/thinkcloud_ci@10.100.218.203/thinkcloud_test@g' -i"],stdout=subprocess.PIPE)
+        print  self.local_path
+        shell = subprocess.Popen(["find","%s" % os.path.join(self.local_path,"manifests")," -name '*.xml' | xargs sed 's@10.240.205.131/thinkcloud_ci@10.100.218.203/thinkcloud_test@g' -i"],stdout=subprocess.PIPE)
         shell.wait()
         repo = Gittle(os.path.join(self.local_path,"manifests"), origin_uri=local_git_repo+"/manifests.git")
         repo.push()
-        shell2 = subprocess.Popen(["sed -i","'s@10.240.205.131@10.100.218.203@g'",os.path.join(self.local_path,"building","config")+"/config-lenovo.yaml"],stdout=subprocess.PIPE)
+        shell2 = subprocess.Popen(["sed -i","'s@10.240.205.131@10.100.218.203@g'","%s" % os.path.join(self.local_path,"building","config")+"/config-lenovo.yaml"],stdout=subprocess.PIPE)
         shell2.wait()
-        shell3 = subprocess.Popen(["sed -i","'s@10.240.205.131@10.100.218.203@g'",os.path.join(self.local_path,"building")+"/README.md"],stdout=subprocess.PIPE)
+        shell3 = subprocess.Popen(["sed -i","'s@10.240.205.131@10.100.218.203@g'","%s" % os.path.join(self.local_path,"building")+"/README.md"],stdout=subprocess.PIPE)
         shell3.wait()
-        shell4 = subprocess.Popen(["echo '\mv LenovoOpenStack*.iso /opt/ThinkCloud_iso' >>",os.path.join(self.local_path,"building")+"/rebuild-iso.sh"],stdout=subprocess.PIPE)
+        shell4 = subprocess.Popen(["echo '\mv LenovoOpenStack*.iso /opt/ThinkCloud_iso' >>","%s" % os.path.join(self.local_path,"building")+"/rebuild-iso.sh"],stdout=subprocess.PIPE)
         shell4.wait()
         repo = Gittle(os.path.join(self.local_path, "building"), origin_uri=local_git_repo + "/building.git")
         repo.push()
