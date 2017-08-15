@@ -149,12 +149,12 @@ class CloneToLocal(object):
         # shell4.wait()
 
 
-repo_rsyc = RepoSync()
-repo_rsyc.add_remote_repo()
+# repo_rsyc = RepoSync()
+# repo_rsyc.add_remote_repo()
 # repo_rsyc.update_remote_repo()
 
 clone_to_local = CloneToLocal(local_code_path,local_code_prefix,local_file_project,sync_file_branch)
-clone_to_local.clone_code()
+# clone_to_local.clone_code()
 clone_to_local.change_local()
 
 
