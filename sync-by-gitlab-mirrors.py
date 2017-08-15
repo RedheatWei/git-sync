@@ -145,9 +145,9 @@ class CloneToLocal(object):
         cmd = "sed -i 's@10.240.205.131:thinkcloud_ci@10.100.218.203:thinkcloud_test@g' %s/README.md" % os.path.join(self.local_path,"building")
         print cmd
         print getstatusoutput(cmd)
-        cmd = "grep  'LenovoOpenStack\*.iso' %s/rebuild-iso.sh || echo '\mv LenovoOpenStack*.iso /opt/ThinkCloud_iso' >> %s/rebuild-iso.sh" % (os.path.join(self.local_path,"building"),os.path.join(self.local_path,"building"))
-        print cmd
-        print getstatusoutput(cmd)
+        # cmd = "grep  'LenovoOpenStack\*.iso' %s/rebuild-iso.sh || echo '\mv LenovoOpenStack*.iso /opt/ThinkCloud_iso' >> %s/rebuild-iso.sh" % (os.path.join(self.local_path,"building"),os.path.join(self.local_path,"building"))
+        # print cmd
+        # print getstatusoutput(cmd)
         git_cmd = "cd %s&&git add .&&git commit -m 'change ip'&&git push origin master" % os.path.join(self.local_path,"building")
         print getstatusoutput(git_cmd)
 
