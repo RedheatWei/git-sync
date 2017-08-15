@@ -133,8 +133,8 @@ class CloneToLocal(object):
         print repo.pull()
         print "pull %s end" % origin_uri
     def change_local(self):
-        print  self.local_path
-        shell = subprocess.Popen(["find","%s" % os.path.join(self.local_path,"manifests")," -name '*.xml' | xargs sed 's@10.240.205.131/thinkcloud_ci@10.100.218.203/thinkcloud_test@g' -i"],stdout=subprocess.PIPE)
+        manifests_path = os.path.join(self.local_path,"manifests")
+        shell = subprocess.Popen(["find",manifests_path," -name '*.xml' | xargs sed 's@10.240.205.131/thinkcloud_ci@10.100.218.203/thinkcloud_test@g' -i"],stdout=subprocess.PIPE)
         shell.wait()
         repo = Gittle(os.path.join(self.local_path,"manifests"), origin_uri=local_git_repo+"/manifests.git")
         repo.push()
