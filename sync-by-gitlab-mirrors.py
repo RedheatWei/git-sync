@@ -124,7 +124,6 @@ class CloneToLocal(object):
                     print e
                     shutil.rmtree(local_orgin_path)
                     self._clone_local(local_orgin_path,origin_uri,self.revision)
-        # self._change_local(local_path)
     def _clone_local(self,local_orgin_path,origin_uri,revision):
         shell = subprocess.Popen(
             ["git", "clone", "-b", revision, origin_uri, local_orgin_path], stdout=subprocess.PIPE)
@@ -140,31 +139,17 @@ class CloneToLocal(object):
         print getstatusoutput(cmd)
         git_cmd = "cd %s&&git add .&&git commit -m 'change ip'&&git push origin master"% manifests_path
         print getstatusoutput(git_cmd)
-        # shell = subprocess.Popen(["find %s" % manifests_path," -name '*.xml' | xargs sed 's@10.240.205.131/thinkcloud_ci@10.100.218.203/thinkcloud_test@g' -i"],stdout=subprocess.PIPE)
-        # shell.wait()
-        # repo = Gittle(os.path.join(self.local_path,"manifests"), origin_uri=local_git_repo+"/manifests.git")
-        # repo.push(branch_name="master")
-        # shell2 = subprocess.Popen(["sed -i 's@10.240.205.131@10.100.218.203@g'",os.path.join(self.local_path,"building","config")+"/config-lenovo.yaml"],stdout=subprocess.PIPE)
         cmd = "sed -i 's@10.240.205.131@10.100.218.203@g' %s/config-lenovo.yaml" % os.path.join(self.local_path,"building","config")
         print cmd
         print getstatusoutput(cmd)
-        # shell2.wait()
-        # shell3 = subprocess.Popen(["sed -i","'s@10.240.205.131@10.100.218.203@g'","%s" % (os.path.join(self.local_path,"building")+"/README.md")],stdout=subprocess.PIPE)
-        # shell3.wait()
         cmd = "sed -i 's@10.240.205.131:thinkcloud_ci@10.100.218.203:thinkcloud_test@g' %s/README.md" % os.path.join(self.local_path,"building")
         print cmd
         print getstatusoutput(cmd)
-        # shell4 = subprocess.Popen(["echo '\mv LenovoOpenStack*.iso /opt/ThinkCloud_iso' >>","%s" % (os.path.join(self.local_path,"building")+"/rebuild-iso.sh")],stdout=subprocess.PIPE)
-        # shell4.wait()
         cmd = "grep  'LenovoOpenStack\*.iso' %s/rebuild-iso.sh || echo '\mv LenovoOpenStack*.iso /opt/ThinkCloud_iso' >> %s/rebuild-iso.sh" % (os.path.join(self.local_path,"building"),os.path.join(self.local_path,"building"))
         print cmd
         print getstatusoutput(cmd)
         git_cmd = "cd %s&&git add .&&git commit -m 'change ip'&&git push origin master" % os.path.join(self.local_path,"building")
         print getstatusoutput(git_cmd)
-        # repo = Gittle(os.path.join(self.local_path, "building"), origin_uri=local_git_repo + "/building.git")
-        # repo.push(branch_name="master")
-        # shell4 = subprocess.Popen("/root/bin/repo init -u",self.local_file_project,"-m",self.sync_file_branch)
-        # shell4.wait()
 
 
 # repo_rsyc = RepoSync()
