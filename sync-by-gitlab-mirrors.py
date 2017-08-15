@@ -154,7 +154,7 @@ class CloneToLocal(object):
         print getstatusoutput(cmd)
         # shell4 = subprocess.Popen(["echo '\mv LenovoOpenStack*.iso /opt/ThinkCloud_iso' >>","%s" % (os.path.join(self.local_path,"building")+"/rebuild-iso.sh")],stdout=subprocess.PIPE)
         # shell4.wait()
-        cmd = "grep  'LenovoOpenStack\*.iso' rebuild-iso.sh || echo '\mv LenovoOpenStack*.iso /opt/ThinkCloud_iso' >> %s/rebuild-iso.sh" % os.path.join(self.local_path,"building")
+        cmd = "grep  'LenovoOpenStack\*.iso' %s/rebuild-iso.sh || echo '\mv LenovoOpenStack*.iso /opt/ThinkCloud_iso' >> %s/rebuild-iso.sh" % (os.path.join(self.local_path,"building"),os.path.join(self.local_path,"building"))
         print cmd
         print getstatusoutput(cmd)
         repo = Gittle(os.path.join(self.local_path, "building"), origin_uri=local_git_repo + "/building.git")
