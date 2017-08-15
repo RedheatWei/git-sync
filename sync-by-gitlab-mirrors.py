@@ -137,11 +137,13 @@ class CloneToLocal(object):
     def change_local(self):
         manifests_path = os.path.join(self.local_path,"manifests")
         cmd = "find %s -name '*.xml' | xargs sed 's@10.240.205.131/thinkcloud_ci@10.100.218.203/thinkcloud_test@g' -i" % manifests_path
-        getstatusoutput(cmd)
+        print getstatusoutput(cmd)
+        git_cmd = "cd %s&&git add .&&git commit -m 'change ip'&&git push origin master"% manifests_path
+        print getstatusoutput(git_cmd)
         # shell = subprocess.Popen(["find %s" % manifests_path," -name '*.xml' | xargs sed 's@10.240.205.131/thinkcloud_ci@10.100.218.203/thinkcloud_test@g' -i"],stdout=subprocess.PIPE)
         # shell.wait()
-        repo = Gittle(os.path.join(self.local_path,"manifests"), origin_uri=local_git_repo+"/manifests.git")
-        repo.push(branch_name="master")
+        # repo = Gittle(os.path.join(self.local_path,"manifests"), origin_uri=local_git_repo+"/manifests.git")
+        # repo.push(branch_name="master")
         # shell2 = subprocess.Popen(["sed -i 's@10.240.205.131@10.100.218.203@g'",os.path.join(self.local_path,"building","config")+"/config-lenovo.yaml"],stdout=subprocess.PIPE)
         cmd = "sed -i 's@10.240.205.131@10.100.218.203@g' %s/config-lenovo.yaml" % os.path.join(self.local_path,"building","config")
         print cmd
@@ -149,7 +151,7 @@ class CloneToLocal(object):
         # shell2.wait()
         # shell3 = subprocess.Popen(["sed -i","'s@10.240.205.131@10.100.218.203@g'","%s" % (os.path.join(self.local_path,"building")+"/README.md")],stdout=subprocess.PIPE)
         # shell3.wait()
-        cmd = "sed -i 's@10.240.205.131@10.100.218.203@g' %s/README.md" % os.path.join(self.local_path,"building")
+        cmd = "sed -i 's@10.240.205.131:thinkcloud_ci@10.100.218.203:thinkcloud_test@g' %s/README.md" % os.path.join(self.local_path,"building")
         print cmd
         print getstatusoutput(cmd)
         # shell4 = subprocess.Popen(["echo '\mv LenovoOpenStack*.iso /opt/ThinkCloud_iso' >>","%s" % (os.path.join(self.local_path,"building")+"/rebuild-iso.sh")],stdout=subprocess.PIPE)
@@ -157,8 +159,10 @@ class CloneToLocal(object):
         cmd = "grep  'LenovoOpenStack\*.iso' %s/rebuild-iso.sh || echo '\mv LenovoOpenStack*.iso /opt/ThinkCloud_iso' >> %s/rebuild-iso.sh" % (os.path.join(self.local_path,"building"),os.path.join(self.local_path,"building"))
         print cmd
         print getstatusoutput(cmd)
-        repo = Gittle(os.path.join(self.local_path, "building"), origin_uri=local_git_repo + "/building.git")
-        repo.push(branch_name="master")
+        git_cmd = "cd %s&&git add .&&git commit -m 'change ip'&&git push origin master" % os.path.join(self.local_path,"building")
+        print getstatusoutput(git_cmd)
+        # repo = Gittle(os.path.join(self.local_path, "building"), origin_uri=local_git_repo + "/building.git")
+        # repo.push(branch_name="master")
         # shell4 = subprocess.Popen("/root/bin/repo init -u",self.local_file_project,"-m",self.sync_file_branch)
         # shell4.wait()
 
@@ -175,5 +179,5 @@ clone_to_local.clone_code()
 
 #find . -name "*.xml" | xargs sed 's@10.240.205.131/thinkcloud_ci@10.100.218.203/thinkcloud_test@g' -i
 # sed -i 's@10.240.205.131@10.100.218.203@g'  config/config-lenovo.yaml
-#sed -i 's/10.240.205.131/10.100.218.203/g'  README.md
+#sed -i 's@10.240.205.131@10.100.218.203@g'  README.md
 #最后还缺少移动文件
