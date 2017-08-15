@@ -9,6 +9,8 @@ import sys,os,shutil
 import xml.dom.minidom
 import subprocess,time
 from gittle import Gittle
+from commands import getstatusoutput
+
 
 sync_file_project = "git@10.240.205.131:thinkcloud_ci/manifests.git" #远程仓库manifests
 sync_file_branch = "thinkcloud_ci_master.xml"#分支文件
@@ -135,9 +137,9 @@ class CloneToLocal(object):
     def change_local(self):
         manifests_path = os.path.join(self.local_path,"manifests")
         cmd = "find %s -name '*.xml' | xargs sed 's@10.240.205.131/thinkcloud_ci@10.100.218.203/thinkcloud_test@g' -i" % manifests_path
-        shell = subprocess.Popen(cmd,stdout=subprocess.PIPE)
+        getstatusoutput(cmd)
         # shell = subprocess.Popen(["find %s" % manifests_path," -name '*.xml' | xargs sed 's@10.240.205.131/thinkcloud_ci@10.100.218.203/thinkcloud_test@g' -i"],stdout=subprocess.PIPE)
-        shell.wait()
+        # shell.wait()
         repo = Gittle(os.path.join(self.local_path,"manifests"), origin_uri=local_git_repo+"/manifests.git")
         repo.push()
         shell2 = subprocess.Popen(["sed -i","'s@10.240.205.131@10.100.218.203@g'","%s" % (os.path.join(self.local_path,"building","config")+"/config-lenovo.yaml")],stdout=subprocess.PIPE)
