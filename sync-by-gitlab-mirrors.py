@@ -144,11 +144,13 @@ class CloneToLocal(object):
         repo.push()
         # shell2 = subprocess.Popen(["sed -i 's@10.240.205.131@10.100.218.203@g'",os.path.join(self.local_path,"building","config")+"/config-lenovo.yaml"],stdout=subprocess.PIPE)
         cmd = "sed -i 's@10.240.205.131@10.100.218.203@g' %s/config-lenovo.yaml" % os.path.join(self.local_path,"building","config")
+        print cmd
         print getstatusoutput(cmd)
         # shell2.wait()
         # shell3 = subprocess.Popen(["sed -i","'s@10.240.205.131@10.100.218.203@g'","%s" % (os.path.join(self.local_path,"building")+"/README.md")],stdout=subprocess.PIPE)
         # shell3.wait()
         cmd = "sed -i 's@10.240.205.131@10.100.218.203@g' %s/README.md" % os.path.join(self.local_path,"building")
+        print cmd
         print getstatusoutput(cmd)
         # shell4 = subprocess.Popen(["echo '\mv LenovoOpenStack*.iso /opt/ThinkCloud_iso' >>","%s" % (os.path.join(self.local_path,"building")+"/rebuild-iso.sh")],stdout=subprocess.PIPE)
         # shell4.wait()
