@@ -96,23 +96,23 @@ class RepoSync(object):
 class CloneToLocal(object):
     def __init__(self,local_code_path,local_code_prefix,local_file_project,sync_file_branch):
         self.getConfig = GetConfigFromRemote(sync_file_project,sync_file_branch,sync_tmp_file)
-        self.local_code_path = local_code_path
-        self.local_code_prefix = local_code_prefix
+        # self.local_code_path = local_code_path
+        # self.local_code_prefix = local_code_prefix
         self.local_file_project = local_file_project
         self.sync_file_branch = sync_file_branch
-    def clone_code_change(self):
-        project = self.getConfig.get_xml_value("project")
-        revision = self.getConfig.get_xml_value("default","revision")
+        self.project = self.getConfig.get_xml_value("project")
+        self.revision = self.getConfig.get_xml_value("default","revision")
+        self.local_path = os.path.join(local_code_path,local_code_prefix)+self.revision
+    def clone_code(self):
         # origin = self.getConfig.get_xml_value("default","origin")
-        local_path = os.path.join(local_code_path,local_code_prefix)+revision
-        self.getConfig.mkdir_safe(local_path)
-        for name in project:
-            path = project[name]
-            local_orgin_path = os.path.join(local_path,path)
+        self.getConfig.mkdir_safe(self.local_path)
+        for name in self.project:
+            path = self.project[name]
+            local_orgin_path = os.path.join(self.local_path,path)
             origin_uri = local_git_repo+"/"+name+".git"
             if not os.path.exists(local_orgin_path):
                 try:
-                    self._clone_local(local_orgin_path,origin_uri,revision)
+                    self._clone_local(local_orgin_path,origin_uri,self.revision)
                 except Exception,e:
                     print e
             else:
@@ -121,8 +121,8 @@ class CloneToLocal(object):
                 except Exception,e:
                     print e
                     shutil.rmtree(local_orgin_path)
-                    self._clone_local(local_orgin_path,origin_uri,revision)
-        self._change_local(local_path)
+                    self._clone_local(local_orgin_path,origin_uri,self.revision)
+        # self._change_local(local_path)
     def _clone_local(self,local_orgin_path,origin_uri,revision):
         shell = subprocess.Popen(
             ["git", "clone", "-b", revision, origin_uri, local_orgin_path], stdout=subprocess.PIPE)
@@ -132,18 +132,18 @@ class CloneToLocal(object):
         print "pull %s start" % origin_uri
         print repo.pull()
         print "pull %s end" % origin_uri
-    def _change_local(self,local_path):
-        shell = subprocess.Popen(["find",os.path.join(local_path,"manifests")," -name '*.xml' | xargs sed 's@10.240.205.131/thinkcloud_ci@10.100.218.203/thinkcloud_test@g' -i"],stdout=subprocess.PIPE)
+    def change_local(self):
+        shell = subprocess.Popen(["find",os.path.join(self.local_path,"manifests")," -name '*.xml' | xargs sed 's@10.240.205.131/thinkcloud_ci@10.100.218.203/thinkcloud_test@g' -i"],stdout=subprocess.PIPE)
         shell.wait()
-        repo = Gittle(os.path.join(local_path,"manifests"), origin_uri=local_git_repo+"/manifests.git")
+        repo = Gittle(os.path.join(self.local_path,"manifests"), origin_uri=local_git_repo+"/manifests.git")
         repo.push()
-        shell2 = subprocess.Popen(["sed -i","'s@10.240.205.131@10.100.218.203@g'",os.path.join(local_path,"building","config")+"/config-lenovo.yaml"],stdout=subprocess.PIPE)
+        shell2 = subprocess.Popen(["sed -i","'s@10.240.205.131@10.100.218.203@g'",os.path.join(self.local_path,"building","config")+"/config-lenovo.yaml"],stdout=subprocess.PIPE)
         shell2.wait()
-        shell3 = subprocess.Popen(["sed -i","'s@10.240.205.131@10.100.218.203@g'",os.path.join(local_path,"building")+"/README.md"],stdout=subprocess.PIPE)
+        shell3 = subprocess.Popen(["sed -i","'s@10.240.205.131@10.100.218.203@g'",os.path.join(self.local_path,"building")+"/README.md"],stdout=subprocess.PIPE)
         shell3.wait()
-        shell4 = subprocess.Popen(["echo '\mv LenovoOpenStack*.iso /opt/ThinkCloud_iso' >>",os.path.join(local_path,"building")+"/rebuild-iso.sh"],stdout=subprocess.PIPE)
+        shell4 = subprocess.Popen(["echo '\mv LenovoOpenStack*.iso /opt/ThinkCloud_iso' >>",os.path.join(self.local_path,"building")+"/rebuild-iso.sh"],stdout=subprocess.PIPE)
         shell4.wait()
-        repo = Gittle(os.path.join(local_path, "building"), origin_uri=local_git_repo + "/building.git")
+        repo = Gittle(os.path.join(self.local_path, "building"), origin_uri=local_git_repo + "/building.git")
         repo.push()
         # shell4 = subprocess.Popen("/root/bin/repo init -u",self.local_file_project,"-m",self.sync_file_branch)
         # shell4.wait()
@@ -154,7 +154,8 @@ repo_rsyc.add_remote_repo()
 # repo_rsyc.update_remote_repo()
 
 clone_to_local = CloneToLocal(local_code_path,local_code_prefix,local_file_project,sync_file_branch)
-clone_to_local.clone_code_change()
+clone_to_local.clone_code()
+clone_to_local.change_local()
 
 
 
