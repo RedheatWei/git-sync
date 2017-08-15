@@ -169,7 +169,7 @@ repo_rsyc.update_remote_repo()
 
 clone_to_local = CloneToLocal(local_code_path,local_code_prefix,local_file_project,sync_file_branch)
 clone_to_local.clone_code()
-clone_to_local.change_local()
+#clone_to_local.change_local()
 
 
 
