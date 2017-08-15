@@ -22,6 +22,7 @@ local_code_path = "/data/local_thinkcloud_ci"#本地存放代码的主目录
 local_code_prefix = "thinkcloud_ci_"#本地存放代码的目录前缀,后面应该加分支名字
 local_git_repo = "git@10.100.218.203:thinkcloud_test"#本地git库
 
+local_file_project = "git@10.240.205.131:thinkcloud_test/manifests.git" #远程仓库manifests
 
 #在远程服务器获取配置文件
 class GetConfigFromRemote(object):
@@ -91,13 +92,15 @@ class RepoSync(object):
             time.sleep(10)
 
 
-
+#把本地git库clone
 class CloneToLocal(object):
-    def __init__(self,local_code_path,local_code_prefix):
+    def __init__(self,local_code_path,local_code_prefix,local_file_project,sync_file_branch):
         self.getConfig = GetConfigFromRemote(sync_file_project,sync_file_branch,sync_tmp_file)
         self.local_code_path = local_code_path
         self.local_code_prefix = local_code_prefix
-    def clone_code(self):
+        self.local_file_project = local_file_project
+        self.sync_file_branch = sync_file_branch
+    def clone_code_change(self):
         project = self.getConfig.get_xml_value("project")
         revision = self.getConfig.get_xml_value("default","revision")
         # origin = self.getConfig.get_xml_value("default","origin")
@@ -119,6 +122,7 @@ class CloneToLocal(object):
                     print e
                     shutil.rmtree(local_orgin_path)
                     self._clone_local(local_orgin_path,origin_uri,revision)
+        self._change_local(local_path)
     def _clone_local(self,local_orgin_path,origin_uri,revision):
         shell = subprocess.Popen(
             ["git", "clone", "-b", revision, origin_uri, local_orgin_path], stdout=subprocess.PIPE)
@@ -128,10 +132,33 @@ class CloneToLocal(object):
         print "pull %s start" % origin_uri
         print repo.pull()
         print "pull %s end" % origin_uri
+    def _change_local(self,local_path):
+        shell = subprocess.Popen(["find",os.path.join(local_path,"manifests")," -name '*.xml' | xargs sed 's@10.240.205.131/thinkcloud_ci@10.100.218.203/thinkcloud_test@g' -i"],stdout=subprocess.PIPE)
+        shell.wait()
+        repo = Gittle(os.path.join(local_path,"manifests"), origin_uri=local_git_repo+"/manifests.git")
+        repo.push()
+        shell2 = subprocess.Popen(["sed -i","'s@10.240.205.131@10.100.218.203@g'",os.path.join(local_path,"building","config")+"/config-lenovo.yaml"],stdout=subprocess.PIPE)
+        shell2.wait()
+        shell3 = subprocess.Popen(["sed -i","'s@10.240.205.131@10.100.218.203@g'",os.path.join(local_path,"building")+"/README.md"],stdout=subprocess.PIPE)
+        shell3.wait()
+        shell4 = subprocess.Popen(["echo '\mv LenovoOpenStack*.iso /opt/ThinkCloud_iso' >>",os.path.join(local_path,"building")+"/rebuild-iso.sh"],stdout=subprocess.PIPE)
+        shell4.wait()
+        repo = Gittle(os.path.join(local_path, "building"), origin_uri=local_git_repo + "/building.git")
+        repo.push()
+        # shell4 = subprocess.Popen("/root/bin/repo init -u",self.local_file_project,"-m",self.sync_file_branch)
+        # shell4.wait()
+
 
 repo_rsyc = RepoSync()
 repo_rsyc.add_remote_repo()
 # repo_rsyc.update_remote_repo()
 
-clone_to_local = CloneToLocal(local_code_path,local_code_prefix)
-clone_to_local.clone_code()
+clone_to_local = CloneToLocal(local_code_path,local_code_prefix,local_file_project,sync_file_branch)
+clone_to_local.clone_code_change()
+
+
+
+#find . -name "*.xml" | xargs sed 's@10.240.205.131/thinkcloud_ci@10.100.218.203/thinkcloud_test@g' -i
+# sed -i 's@10.240.205.131@10.100.218.203@g'  config/config-lenovo.yaml
+#sed -i 's/10.240.205.131/10.100.218.203/g'  README.md
+#最后还缺少移动文件
