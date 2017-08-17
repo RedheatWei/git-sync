@@ -120,7 +120,7 @@ class GetGroupAndProject(object):
             print e
             sys.exit(1)
         else:
-            print "clone %s to %s successfully!" % (self.sync_file_project, self.sync_tmp_file)
+            print "clone %s to %s successfully!" % (self.repo, self.sync_tmp_file)
             return xml.dom.minidom.parse(os.path.join(self.sync_tmp_file, self.file_name))
     def get_xml_value(self):
         config_obj = self._get_name()
