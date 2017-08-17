@@ -25,10 +25,12 @@ class HttpRequest(object):
     def post_request(self,url,textmod=None,header_dict=None):
         if textmod:
             textmod = urllib.urlencode(textmod)
-            url = '%s%s%s' % (url, '?', textmod)
+            # url = '%s%s%s' % (url, '?', textmod)
         req = urllib2.Request(url=url,headers=header_dict)
-        res = urllib2.urlopen(req)
-        res = res.read()
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())
+        response = opener.open(req,textmod)
+        # res = urllib2.urlopen(req)
+        res = response.read()
         return json.loads(res)
 class SyncFromRemote(object):
     def __init__(self,private_token,url="10.100.218.203",):
@@ -42,6 +44,7 @@ class SyncFromRemote(object):
         # self.remote_git_host = remote_git_host
         self.local_git_host = "10.100.218.203"
     def down_remote_mirror(self,group_name,project_name,remote_git_host):
+        print "down"
         local_group_save_path = os.path.join(self.local_save_path,group_name)
         self._mkdir_safe(local_group_save_path)
         local_project_save_path = os.path.join(local_group_save_path,project_name)+".git"
@@ -83,7 +86,7 @@ class SyncFromRemote(object):
     def _create_group(self, group_name):
         group_id = self._check_group_exists(group_name)
         if group_id == 0:
-            textmod = {"name": group_name, "path": group_name}
+            textmod = {"name": group_name, "path": group_name,"description":group_name}
             group = self.http_request.post_request(self.url_groups, textmod, self.header_dict)
             if group[0]['id']:
                 return group[0]['id']
