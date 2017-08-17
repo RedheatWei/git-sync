@@ -56,7 +56,7 @@ class SyncFromRemote(object):
             # if shell.wait() !=0:
             #     shutil.rmtree(local_project_save_path)
         # cmd = "cd %s;git clone --mirror git@%s:%s/%s.git" % (local_group_save_path,remote_git_host,group_name,project_name)
-        cmd = ["cd",local_group_save_path,";","git clone --mirror git@%s:%s/%s.git" % (remote_git_host,group_name,project_name)]
+        cmd = ["cd",local_group_save_path,";","git","clone","--mirror","git@%s:%s/%s.git" % (remote_git_host,group_name,project_name)]
         print cmd
         shell = subprocess.Popen(cmd,subprocess.PIPE)
         shell.wait()
