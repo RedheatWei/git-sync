@@ -44,7 +44,7 @@ class SyncFromRemote(object):
         self._mkdir_safe(local_group_save_path)
         local_project_save_path = os.path.join(local_group_save_path,project_name)+".git"
         if os.path.exists(local_project_save_path):
-            cmd = "cd %s;git remote update"
+            cmd = "cd %s;git remote update" % local_project_save_path
             shell = subprocess.Popen(cmd,subprocess.PIPE)
             if shell.wait() !=0:
                 shutil.rmtree(local_project_save_path)
