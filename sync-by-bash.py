@@ -40,7 +40,6 @@ class SyncFromRemote(object):
         # self.remote_git_host = remote_git_host
         self.local_git_host = "10.100.218.203"
     def down_remote_mirror(self,group_name,project_name,remote_git_host):
-        print self.local_save_path,group_name
         local_group_save_path = os.path.join(self.local_save_path,group_name)
         self._mkdir_safe(local_group_save_path)
         local_project_save_path = os.path.join(local_group_save_path,project_name)+".git"
@@ -51,7 +50,6 @@ class SyncFromRemote(object):
             if shell.wait() !=0:
                 shutil.rmtree(local_project_save_path)
         cmd = "cd %s;git clone --mirror git@%s:%s/%s.git" % (local_group_save_path,remote_git_host,group_name,project_name)
-        print cmd
         shell = subprocess.Popen(cmd,subprocess.PIPE)
         shell.wait()
     def push_mirror_to_local(self,group_name,project_name):
