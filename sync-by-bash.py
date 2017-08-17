@@ -142,8 +142,8 @@ class GetGroupAndProject(object):
                 xml_dict[default_remote]['project'].append(project_name)
         return xml_dict
 
-GetGroupAndProject = GetGroupAndProject(sys.argv[1])
-config = GetGroupAndProject.get_xml_value()
+get_config = GetGroupAndProject(sys.argv[1])
+config = get_config.get_xml_value()
 sync = SyncFromRemote("vXb3ysPaQ6naPUF9z-FM")
 
 for remote in config:
