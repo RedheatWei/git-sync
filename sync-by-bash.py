@@ -131,12 +131,12 @@ class GetGroupAndProject(object):
         project_objs = doc.getElementsByTagName("project")
         xml_dict = {}
         for remote in remote_objs:
-            xml_dict[remote.getAttribute['name']]["fetch"] = remote.getAttribute['fetch']
-            xml_dict[remote.getAttribute['name']]["review"] = remote.getAttribute['review']
-            xml_dict[remote.getAttribute['name']]["project"] = []
+            xml_dict[remote.getAttribute('name')]["fetch"] = remote.getAttribute('fetch')
+            xml_dict[remote.getAttribute('name')]["review"] = remote.getAttribute('review')
+            xml_dict[remote.getAttribute('name')]["project"] = []
         for project in project_objs:
             project_name = project.getAttribute("name")
-            project_remote = project.getAttribute['remote']
+            project_remote = project.getAttribute('remote')
             if project_remote:
                 xml_dict[project_remote]['project'].append(project_name)
             else:
