@@ -150,10 +150,11 @@ sync = SyncFromRemote("vXb3ysPaQ6naPUF9z-FM")
 
 for remote in config:
     group_name = "/".split(config[remote]["fetch"])[-1]
+    project_fetch = config[remote]["fetch"]
     for project_name in config[remote]["project"]:
-        sync.down_remote_mirror(group_name,project_name)
+        sync.down_remote_mirror(group_name,project_name,project_fetch)
         sync.push_mirror_to_local(group_name,project_name)
-        sync.update_mirror(group_name,project_name)
+        sync.update_mirror(group_name,project_name,project_fetch)
 
 
 
