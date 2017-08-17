@@ -23,8 +23,10 @@ class HttpRequest(object):
         res = res.read()
         return json.loads(res)
     def post_request(self,url,textmod=None,header_dict=None):
-        textmod = json.dumps(textmod)
-        req = urllib2.Request(url=url, data=textmod,headers=header_dict)
+        if textmod:
+            textmod = urllib.urlencode(textmod)
+            url = '%s%s%s' % (url, '?', textmod)
+        req = urllib2.Request(url=url,headers=header_dict)
         res = urllib2.urlopen(req)
         res = res.read()
         return json.loads(res)
