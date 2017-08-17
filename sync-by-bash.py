@@ -45,7 +45,6 @@ class SyncFromRemote(object):
         # self.remote_git_host = remote_git_host
         self.local_git_host = "10.100.218.203"
     def down_remote_mirror(self,group_name,project_name,remote_git_host):
-        print "down"
         local_group_save_path = os.path.join(self.local_save_path,group_name)
         self._mkdir_safe(local_group_save_path)
         local_project_save_path = os.path.join(local_group_save_path,project_name)+".git"
@@ -57,7 +56,6 @@ class SyncFromRemote(object):
             # if shell.wait() !=0:
             #     shutil.rmtree(local_project_save_path)
         cmd = "cd %s;git clone --mirror git@%s:%s/%s.git" % (local_group_save_path,remote_git_host,group_name,project_name)
-
         # cmd = ["cd",local_group_save_path,";","git","clone","--mirror","git@%s:%s/%s.git" % (remote_git_host,group_name,project_name)]
         print cmd
         getstatusoutput(cmd)
@@ -68,10 +66,11 @@ class SyncFromRemote(object):
         self._create_project(group_name,project_name)
         if not os.path.exists(local_project_save_path):
             self.down_remote_mirror(group_name,project_name,remote_git_host)
-        cmd = ["cd", local_project_save_path, ";",
-               "git push --mirror git@%s:%s/%s.git" % (self.local_git_host, group_name, project_name)]
-        shell = subprocess.Popen(cmd, subprocess.PIPE)
-        shell.wait()
+        # cmd = ["cd", local_project_save_path, ";","git push --mirror git@%s:%s/%s.git" % (self.local_git_host, group_name, project_name)]
+        cmd = "cd %s;git push --mirror git@%s:%s/%s.git" % (local_project_save_path,self.local_git_host, group_name, project_name)
+        print getstatusoutput(cmd)
+        # shell = subprocess.Popen(cmd, subprocess.PIPE)
+        # shell.wait()
 
     def update_mirror(self,group_name,project_name,remote_git_host):
         self.down_remote_mirror(group_name, project_name,remote_git_host)
