@@ -152,9 +152,9 @@ config = get_config.get_xml_value()
 sync = SyncFromRemote("vXb3ysPaQ6naPUF9z-FM")
 
 for remote in config:
-    group_name = "/".split(config[remote]["fetch"])[-1]
+    group_name = config[remote]["fetch"].split("/")
     print group_name
-    project_fetch = "/".split('@'.split(config[remote]["fetch"])[-1])[0]
+    project_fetch = config[remote]["fetch"].split("@")[-1].split("/")[0]
     for project_name in config[remote]["project"]:
         sync.down_remote_mirror(group_name,project_name,project_fetch)
         sync.push_mirror_to_local(group_name,project_name)
