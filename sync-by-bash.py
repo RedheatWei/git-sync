@@ -5,7 +5,8 @@ Created on '2017/8/17 10:40'
 Email: qjyyn@qq.com
 @author: Redheat
 '''
-import  urllib,urllib2,json,os,subprocess,shutil,sys,xml
+import  urllib,urllib2,json,os,subprocess,shutil,sys
+import xml.dom.minidom
 from gittle import Gittle
 
 class HttpRequest(object):
