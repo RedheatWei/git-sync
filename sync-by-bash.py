@@ -71,7 +71,7 @@ class SyncFromRemote(object):
 
     def update_mirror(self,group_name,project_name,remote_git_host):
         self.down_remote_mirror(group_name, project_name,remote_git_host)
-        self.push_mirror_to_local(group_name,project_name)
+        self.push_mirror_to_local(group_name,project_name,remote_git_host)
     def _create_project(self, group_name, project_name):
         group_id = self._create_group(group_name)
         if group_id != 0:
