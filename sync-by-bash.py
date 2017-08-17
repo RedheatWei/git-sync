@@ -164,7 +164,7 @@ for remote in config:
     project_fetch = config[remote]["fetch"].split("@")[-1].split("/")[0]
     for project_name in config[remote]["project"]:
         sync.down_remote_mirror(group_name,project_name,project_fetch)
-        sync.push_mirror_to_local(group_name,project_name)
+        sync.push_mirror_to_local(group_name,project_name,project_fetch)
         sync.update_mirror(group_name,project_name,project_fetch)
 
 
