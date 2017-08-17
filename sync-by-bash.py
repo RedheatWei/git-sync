@@ -32,7 +32,7 @@ class SyncFromRemote(object):
         self.url = "http://10.100.218.203/api/v3/groups"
         self.http_request = HttpRequest()
         self.private_token = private_token
-    def _get_all_group(self):
+    def get_all_group(self):
         header_dict = {"PRIVATE-TOKEN":self.private_token}
         groups = self.http_request.get_request(self.url,header_dict=header_dict)
         for i in groups:
