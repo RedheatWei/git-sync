@@ -37,5 +37,6 @@ class SyncFromRemote(object):
         self.http_request.get_request(self.url,header_dict=header_dict)
 
 sync = SyncFromRemote("vXb3ysPaQ6naPUF9z-FM")
+sync.get_all_group()
 
 
