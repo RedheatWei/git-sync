@@ -18,16 +18,13 @@ class HttpRequest(object):
         #     req = urllib2.Request(url)
         res = urllib2.urlopen(req)
         res = res.read()
-        s = json.dumps(res,__dict__)
-        print s
-        print type(s)
-        print(res)
+        return json.loads(res)
     def post_request(self,url,textmod=None,header_dict=None):
         textmod = json.dumps(textmod)
         req = urllib2.Request(url=url, data=textmod,headers=header_dict)
         res = urllib2.urlopen(req)
         res = res.read()
-        print(res)
+        return json.loads(res)
 class SyncFromRemote(object):
     def __init__(self,private_token):
         # self.group = group
