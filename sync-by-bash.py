@@ -17,13 +17,13 @@ class HttpRequest(object):
         # else:
         #     req = urllib2.Request(url)
         res = urllib2.urlopen(req)
-        res = res.read()
+        # res = res.read()
         print(res)
     def post_request(self,url,textmod=None,header_dict=None):
         textmod = json.dumps(textmod)
         req = urllib2.Request(url=url, data=textmod,headers=header_dict)
         res = urllib2.urlopen(req)
-        res = res.read()
+        # res = res.read()
         print(res)
 class SyncFromRemote(object):
     def __init__(self,private_token):
