@@ -6,6 +6,7 @@ Email: qjyyn@qq.com
 @author: Redheat
 '''
 import  urllib,urllib2,json,os,shutil,sys,time
+import requests
 import xml.dom.minidom
 from gittle import Gittle
 from commands import getstatusoutput
@@ -34,11 +35,9 @@ class HttpRequest(object):
         res = response.read()
         return json.loads(res)
     def delete_request(self,url,header_dict=None):
-        request = urllib2.Request(url,headers=header_dict)
-        response = urllib2.urlopen(request)
-        request.get_method = lambda: 'DELETE'
+        response = requests.delete(url,headers=header_dict)
         res = response.read()
-        return json.loads(res)
+        return  json.loads(res)
 class SyncFromRemote(object):
     def __init__(self,private_token,url="10.100.218.203",):
         # self.group = group
