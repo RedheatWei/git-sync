@@ -75,8 +75,8 @@ class SyncFromRemote(object):
         # shell.wait()
 
     def update_mirror(self,group_name,project_name,remote_git_host):
-        self.down_remote_mirror(group_name, project_name,remote_git_host)
-        self.push_mirror_to_local(group_name,project_name,remote_git_host)
+        if self.down_remote_mirror(group_name, project_name,remote_git_host)==0:
+            self.push_mirror_to_local(group_name,project_name,remote_git_host)
     def _create_project(self, group_name, project_name):
         group_id = self._create_group(group_name)
         project_id = self._check_project_exists(group_id, project_name)
@@ -164,13 +164,12 @@ class GetGroupAndProject(object):
 get_config = GetGroupAndProject(sys.argv[1])
 config = get_config.get_xml_value()
 sync = SyncFromRemote("vXb3ysPaQ6naPUF9z-FM")
-
 for remote in config:
     group_name = config[remote]["fetch"].split("/")[-1]
     project_fetch = config[remote]["fetch"].split("@")[-1].split("/")[0]
     for project_name in config[remote]["project"]:
-        sync.down_remote_mirror(group_name,project_name,project_fetch)
-        sync.push_mirror_to_local(group_name,project_name,project_fetch)
+        if sync.down_remote_mirror(group_name,project_name,project_fetch) ==0:
+            sync.push_mirror_to_local(group_name,project_name,project_fetch)
         sync.update_mirror(group_name,project_name,project_fetch)
         time.sleep(5)
 
