@@ -198,7 +198,7 @@ class CloneToLocal(object):
         # self.local_path = os.path.join(local_code_path,local_code_prefix)+self.revision
     def clone_code(self):
         if not os.path.exists(self.local_clone_path):
-            os.mkdirs(self.local_clone_path)
+            os.makedirs(self.local_clone_path)
         for project in self.need_change:
             cmd = "cd %s;git clone git@%s:%s/%s.git" % (self.local_clone_path,self.local_git_host,self.group_name,project)
             print getstatusoutput(cmd)
