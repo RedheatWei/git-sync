@@ -109,6 +109,7 @@ class SyncFromRemote(object):
     def _check_project_exists(self,group_id,project_name):
         textmod = {"search":project_name}
         projects = self.http_request.get_request(self.url_groups+"/"+str(group_id)+"/projects",textmod,header_dict=self.header_dict)
+
         for project in projects:
             if project['name'] == project_name:
                 return project['id']
