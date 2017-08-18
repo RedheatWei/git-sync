@@ -33,10 +33,8 @@ class HttpRequest(object):
         # res = urllib2.urlopen(req)
         res = response.read()
         return json.loads(res)
-    def delete_request(self,url,textmod=None,header_dict=None):
-        if textmod:
-            textmod = urllib.urlencode(textmod)
-        request = urllib2.Request(url,data=textmod,headers=header_dict)
+    def delete_request(self,url,header_dict=None):
+        request = urllib2.Request(url,headers=header_dict)
         request.get_method = lambda: 'DELETE'
         response = urllib2.urlopen(request)
         res = response.read()
@@ -225,5 +223,5 @@ def change_local():
     local_code.clone_code()
     local_code.change_local()
 
-# sync_code()
+sync_code()
 change_local()
