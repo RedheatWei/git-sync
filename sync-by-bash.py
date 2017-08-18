@@ -77,10 +77,9 @@ class SyncFromRemote(object):
         self.push_mirror_to_local(group_name,project_name,remote_git_host)
     def _create_project(self, group_name, project_name):
         group_id = self._create_group(group_name)
-        print group_id
-        if group_id != 0:
-            project_id = self._check_project_exists(group_id, project_name)
-        else:
+        # if group_id != 0:
+        project_id = self._check_project_exists(group_id, project_name)
+        if project_id == 0:
             textmod = {"name": project_name, "namespace_id": group_id}
             project = self.http_request.post_request(self.url_projects, textmod, self.header_dict)
             print project
@@ -168,7 +167,7 @@ for remote in config:
     group_name = config[remote]["fetch"].split("/")[-1]
     project_fetch = config[remote]["fetch"].split("@")[-1].split("/")[0]
     for project_name in config[remote]["project"]:
-        sync.down_remote_mirror(group_name,project_name,project_fetch)
+        # sync.down_remote_mirror(group_name,project_name,project_fetch)
         sync.push_mirror_to_local(group_name,project_name,project_fetch)
         # sync.update_mirror(group_name,project_name,project_fetch)
 
