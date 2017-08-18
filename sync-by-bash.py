@@ -87,7 +87,7 @@ class SyncFromRemote(object):
         group_id = self._create_group(group_name)
         project_id = self._check_project_exists(group_id, project_name)
         if project_id != 0:
-            self.http_request.delete_request(self.url_projects, header_dict=self.header_dict)
+            self.http_request.delete_request(self.url_projects+str(project_id), header_dict=self.header_dict)
             # shutil.rmtree(local_project_save_path)
     def _create_project(self, group_name, project_name):
         group_id = self._create_group(group_name)
