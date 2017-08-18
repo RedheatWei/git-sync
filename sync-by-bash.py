@@ -191,11 +191,7 @@ class CloneToLocal(object):
         self.local_git_host = "10.100.218.203"
         self.group_name = repo.split("/")[-2].split(":")[-1]
         self.remote_host = repo.split("@")[-1].split(":")[0]
-        # self.local_file_project = local_file_project
-        # self.sync_file_branch = sync_file_branch
-        # self.project = self.getConfig.get_xml_value("project")
-        # self.revision = self.getConfig.get_xml_value("default","revision")
-        # self.local_path = os.path.join(local_code_path,local_code_prefix)+self.revision
+
     def clone_code(self):
         if not os.path.exists(self.local_clone_path):
             os.makedirs(self.local_clone_path)
