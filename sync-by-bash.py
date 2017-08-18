@@ -73,10 +73,11 @@ class SyncFromRemote(object):
         print "PUSH:"+getstatusoutput(cmd)[1]
         # shell = subprocess.Popen(cmd, subprocess.PIPE)
         # shell.wait()
-
     def update_mirror(self,group_name,project_name,remote_git_host):
         if self.down_remote_mirror(group_name, project_name,remote_git_host)==0:
             self.push_mirror_to_local(group_name,project_name,remote_git_host)
+    def del_project(self):
+
     def _create_project(self, group_name, project_name):
         group_id = self._create_group(group_name)
         project_id = self._check_project_exists(group_id, project_name)
@@ -161,7 +162,7 @@ class GetGroupAndProject(object):
                 xml_dict[default_remote]['project'].append(project_name)
         return xml_dict
 
-get_config = GetGroupAndProject(sys.argv[1])
+get_config = GetGroupAndProject(sys.argv[3],sys.argv[2])
 config = get_config.get_xml_value()
 sync = SyncFromRemote("vXb3ysPaQ6naPUF9z-FM")
 for remote in config:
