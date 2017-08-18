@@ -128,7 +128,7 @@ class GetGroupAndProject(object):
         self.repo = repo
         self.file_name = file_name
         self.sync_tmp_file = "/tmp/sync_file"  # 远程仓库manifests临时存放位置
-        self.group_manifests = repo.split("/")[-1].split(".")[0]
+        self.group_manifests = repo.split(":")[-1].split("/")[0]
         self.tmp_path = os.path.join(self.sync_tmp_file,self.group_manifests)
         if not os.path.exists(self.tmp_path):
             os.makedirs(self.tmp_path)
