@@ -80,7 +80,7 @@ class SyncFromRemote(object):
     def update_mirror(self,group_name,project_name,remote_git_host):
         if self.down_remote_mirror(group_name, project_name,remote_git_host)==0:
             self.push_mirror_to_local(group_name,project_name,remote_git_host)
-    def del_project(self,group_name,project_name):
+    def del_project(self,group_name,project_name,remote_git_host):
         # local_project_save_path = os.path.join(self.local_save_path,group_name,project_name)+".git"
         print "DELETE project %s" % project_name
         group_id = self._create_group(group_name)
@@ -88,6 +88,7 @@ class SyncFromRemote(object):
         if project_id != 0:
             print self.http_request.delete_request(self.url_projects+"/"+str(project_id), header_dict=self.header_dict)
             # shutil.rmtree(local_project_save_path)
+        self.update_mirror(group_name,project_name,remote_git_host)
     def _create_project(self, group_name, project_name):
         group_id = self._create_group(group_name)
         project_id = self._check_project_exists(group_id, project_name)
@@ -201,21 +202,22 @@ class CloneToLocal(object):
             git_cmd = "cd %s&&git add .&&git commit -m 'change ip'&&git push origin master"% os.path.join(self.local_clone_path,change)
             print getstatusoutput(git_cmd)
 
-def sync_manifests(repo,sync):
-    group_name = repo.split("/")[-2].split(":")[-1]
-    project_name = repo.split("/")[-1].split(".")[0]
-    project_fetch = repo.split("@")[-1].split("/")[0].split(":")[0]
-    sync.down_remote_mirror(group_name,project_name,project_fetch)
-    sync.push_mirror_to_local(group_name,project_name,project_fetch)
+# def sync_manifests(repo,sync):
+#     group_name = repo.split("/")[-2].split(":")[-1]
+#     project_name = repo.split("/")[-1].split(".")[0]
+#     project_fetch = repo.split("@")[-1].split("/")[0].split(":")[0]
+#     sync.down_remote_mirror(group_name,project_name,project_fetch)
+#     sync.push_mirror_to_local(group_name,project_name,project_fetch)
 def sync_code(config,sync):
     for remote in config:
         group_name = config[remote]["fetch"].split("/")[-1]
         project_fetch = config[remote]["fetch"].split("@")[-1].split("/")[0]
         for project_name in config[remote]["project"]:
-            if sync.down_remote_mirror(group_name,project_name,project_fetch) ==0:
-                sync.push_mirror_to_local(group_name,project_name,project_fetch)
-            sync.update_mirror(group_name,project_name,project_fetch)
-            time.sleep(5)
+            if not need_change.has_key(project_name):
+                if sync.down_remote_mirror(group_name,project_name,project_fetch) ==0:
+                    sync.push_mirror_to_local(group_name,project_name,project_fetch)
+                sync.update_mirror(group_name,project_name,project_fetch)
+                time.sleep(5)
 
 def change_local(need_change,xml_file,repo):
     local_code = CloneToLocal(need_change,xml_file,repo)
@@ -226,14 +228,15 @@ def change_local(need_change,xml_file,repo):
 repo = sys.argv[1]
 xml_file = sys.argv[2]
 need_change = {"manifests":[xml_file], "building":["config/config-lenovo.yaml","README.md"]}
+project_fetch = repo.split("@")[-1].split("/")[0].split(":")[0]
+
 
 get_config = GetGroupAndProject(xml_file, repo)
 config = get_config.get_xml_value()
 sync = SyncFromRemote("vXb3ysPaQ6naPUF9z-FM")
-
 group_name = repo.split("/")[-2].split(":")[-1]
 for change in need_change:
-    sync.del_project(group_name,change)
-sync_code(config,sync)
-sync_manifests(repo,sync)
+    sync.del_project(group_name, change,project_fetch)
 change_local(need_change,xml_file,repo)
+# sync_manifests(repo, sync)
+sync_code(config,sync)
