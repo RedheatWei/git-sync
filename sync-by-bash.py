@@ -201,12 +201,12 @@ class CloneToLocal(object):
 def sync_manifests(repo,sync):
     group_name = repo.split("/")[-2].split(":")[-1]
     project_name = repo.split("/")[-1].split(".")[0]
-    project_fetch = repo.split("@")[-1].split("/")[0].split(":")[-1]
+    project_fetch = repo.split("@")[-1].split("/")[0].split(":")[0]
     sync.down_remote_mirror(group_name,project_name,project_fetch)
     sync.push_mirror_to_local(group_name,project_name,project_fetch)
 def sync_code(config,sync):
     for remote in config:
-        group_name = config[remote]["fetch"].split("/")[0]
+        group_name = config[remote]["fetch"].split("/")[-1]
         project_fetch = config[remote]["fetch"].split("@")[-1].split("/")[0]
         for project_name in config[remote]["project"]:
             if sync.down_remote_mirror(group_name,project_name,project_fetch) ==0:
