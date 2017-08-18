@@ -128,19 +128,21 @@ class GetGroupAndProject(object):
         self.repo = repo
         self.file_name = file_name
         self.sync_tmp_file = "/tmp/sync_file"  # 远程仓库manifests临时存放位置
-        if not os.path.exists(self.sync_tmp_file):
-            os.makedirs(self.sync_tmp_file)
+        self.group_manifests = repo.split("/")[-1].split(".")[0]
+        self.tmp_path = os.path.join(self.sync_tmp_file,self.group_manifests)
+        if not os.path.exists(self.tmp_path):
+            os.makedirs(self.tmp_path)
     def _get_name(self):
         try:
-            if os.path.exists(self.sync_tmp_file):
-                shutil.rmtree(self.sync_tmp_file)
-            Gittle.clone(self.repo, self.sync_tmp_file)
+            if os.path.exists(self.tmp_path):
+                shutil.rmtree(self.tmp_path)
+            Gittle.clone(self.repo, self.tmp_path)
         except Exception, e:
             print e
             sys.exit(1)
         else:
-            print "clone %s to %s successfully!" % (self.repo, self.sync_tmp_file)
-            return xml.dom.minidom.parse(os.path.join(self.sync_tmp_file, self.file_name))
+            print "clone %s to %s successfully!" % (self.repo, self.tmp_path)
+            return xml.dom.minidom.parse(os.path.join(self.tmp_path, self.file_name))
     def get_xml_value(self):
         config_obj = self._get_name()
         doc = config_obj.documentElement
