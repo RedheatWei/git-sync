@@ -83,7 +83,7 @@ class SyncFromRemote(object):
             if project['id']:
                 return project['id']
             else:
-                print "project create error,please check."
+                print "project %s create error,please check." % project_name
                 sys.exit(1)
         return project_id
     def _create_group(self, group_name):
@@ -94,7 +94,7 @@ class SyncFromRemote(object):
             if group[0]['id']:
                 return group[0]['id']
             else:
-                print "group create error,please check."
+                print "group %s create error,please check." % group_name
                 sys.exit(1)
         return group_id
     def _get_all_group(self):
