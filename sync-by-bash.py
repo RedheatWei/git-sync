@@ -35,8 +35,8 @@ class HttpRequest(object):
         return json.loads(res)
     def delete_request(self,url,header_dict=None):
         request = urllib2.Request(url,headers=header_dict)
-        request.get_method = lambda: 'DELETE'
         response = urllib2.urlopen(request)
+        request.get_method = lambda: 'DELETE'
         res = response.read()
         return json.loads(res)
 class SyncFromRemote(object):
