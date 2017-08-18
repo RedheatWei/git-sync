@@ -199,7 +199,7 @@ class CloneToLocal(object):
             cmd = "cd %s;git clone git@%s:%s/%s.git" % (self.local_clone_path,self.local_git_host,self.group_name,project)
             print getstatusoutput(cmd)
     def change_local(self):
-        cmd = "find %s | xargs sed 's@%s@%s@g' -i %s" % (self.local_clone_path,self.remote_host,self.local_git_host)
+        cmd = "find %s | xargs sed 's@%s@%s@g' -i" % (self.local_clone_path,self.remote_host,self.local_git_host)
         print getstatusoutput(cmd)
         for project in self.need_change:
             git_cmd = "cd %s&&git add .&&git commit -m 'change ip'&&git push origin master"% os.path.join(self.local_clone_path,project)
