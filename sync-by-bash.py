@@ -189,8 +189,8 @@ class CloneToLocal(object):
         self.need_change=["manifests","building"]
         self.local_clone_path = "/data/local_code/local_"+xml_file.split(".")[0]
         self.local_git_host = "10.100.218.203"
-        self.group_name = repo.split("/")[-2].split(":")-1
-
+        self.group_name = repo.split("/")[-2].split(":")[-1]
+        self.remote_host = repo.split("@")[-1].split(":")[0]
         # self.local_file_project = local_file_project
         # self.sync_file_branch = sync_file_branch
         # self.project = self.getConfig.get_xml_value("project")
@@ -203,7 +203,7 @@ class CloneToLocal(object):
             cmd = "cd %s;git clone git@%s:%s/%s.git" % (self.local_clone_path,self.local_git_host,self.group_name,project)
             print getstatusoutput(cmd)
     def change_local(self):
-        cmd = "find %s | xargs sed 's@10.240.205.131@10.100.218.203@g' -i %s" % self.local_clone_path
+        cmd = "find %s | xargs sed 's@%s@%s@g' -i %s" % (self.local_clone_path,)
         print getstatusoutput(cmd)
         for project in self.need_change:
             git_cmd = "cd %s&&git add .&&git commit -m 'change ip'&&git push origin master"% os.path.join(self.local_clone_path,project)
@@ -232,5 +232,7 @@ for remote in config:
         sync.update_mirror(group_name,project_name,project_fetch)
         time.sleep(5)
 
-
+local_code = CloneToLocal(sys.argv[2],sys.argv[1])
+local_code.clone_code()
+local_code.change_local()
 
