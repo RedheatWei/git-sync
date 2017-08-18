@@ -36,7 +36,7 @@ class HttpRequest(object):
     def delete_request(self,url,textmod=None,header_dict=None):
         if textmod:
             textmod = urllib.urlencode(textmod)
-        request = urllib2.Request(url, header_dict, textmod)
+        request = urllib2.Request(url, header_dict=header_dict, textmod=textmod)
         request.get_method = lambda: 'DELETE'
         response = urllib2.urlopen(request)
         res = response.read()
