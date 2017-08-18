@@ -84,10 +84,11 @@ class SyncFromRemote(object):
             self.push_mirror_to_local(group_name,project_name,remote_git_host)
     def del_project(self,group_name,project_name):
         # local_project_save_path = os.path.join(self.local_save_path,group_name,project_name)+".git"
+        print "DELETE project %s" % project_name
         group_id = self._create_group(group_name)
         project_id = self._check_project_exists(group_id, project_name)
         if project_id != 0:
-            print self.http_request.delete_request(self.url_projects, header_dict=self.header_dict)
+            self.http_request.delete_request(self.url_projects, header_dict=self.header_dict)
             # shutil.rmtree(local_project_save_path)
     def _create_project(self, group_name, project_name):
         group_id = self._create_group(group_name)
@@ -182,13 +183,13 @@ class CloneToLocal(object):
         self.local_git_host = "10.100.218.203"
         self.group_name = repo.split("/")[-2].split(":")[-1]
         self.remote_host = repo.split("@")[-1].split(":")[0]
-        self.sync = SyncFromRemote("vXb3ysPaQ6naPUF9z-FM")
+        # self.sync = SyncFromRemote("vXb3ysPaQ6naPUF9z-FM")
         self.need_change=need_change
     def clone_code(self):
         if not os.path.exists(self.local_clone_path):
             os.makedirs(self.local_clone_path)
         for project in self.need_change:
-            self.sync.del_project(self.group_name,project)
+            # self.sync.del_project(self.group_name,project)
             project_path = os.path.join(self.local_clone_path,project)
             if os.path.exists(project_path):
                 shutil.rmtree(project_path)
@@ -232,6 +233,9 @@ get_config = GetGroupAndProject(xml_file, repo)
 config = get_config.get_xml_value()
 sync = SyncFromRemote("vXb3ysPaQ6naPUF9z-FM")
 
+group_name = repo.split("/")[-2].split(":")[-1]
+for change in need_change:
+    sync.del_project(group_name,change)
 sync_code(config,sync)
 sync_manifests(repo,sync)
 change_local(need_change,xml_file,repo)
