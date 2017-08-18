@@ -50,17 +50,16 @@ class SyncFromRemote(object):
         local_project_save_path = os.path.join(local_group_save_path,project_name)+".git"
         if os.path.exists(local_project_save_path):
             cmd = "cd %s;git remote update" % local_project_save_path
-            print getstatusoutput(cmd)[1]
-            # cmd = ["cd",local_project_save_path,";","git remote update"]
-            # print cmd
-            # shell = subprocess.Popen(cmd,subprocess.PIPE)
-            # if shell.wait() !=0:
-            #     shutil.rmtree(local_project_save_path)
+            stat =  getstatusoutput(cmd)
+            print stat[1]
+            if stat[0] !=0:
+                shutil.rmtree(local_project_save_path)
+            else:
+                return stat[0]
         cmd = "cd %s;git clone --mirror git@%s:%s/%s.git" % (local_group_save_path,remote_git_host,group_name,project_name)
-        # cmd = ["cd",local_group_save_path,";","git","clone","--mirror","git@%s:%s/%s.git" % (remote_git_host,group_name,project_name)]
-        print getstatusoutput(cmd)[1]
-        # shell = subprocess.Popen(cmd,subprocess.PIPE)
-        # shell.wait()
+        stat = getstatusoutput(cmd)
+        print stat[1]
+        return stat[0]
     def push_mirror_to_local(self,group_name,project_name,remote_git_host):
         local_project_save_path = os.path.join(self.local_save_path,group_name,project_name)+".git"
         self._create_project(group_name,project_name)
