@@ -225,5 +225,5 @@ def change_local():
     local_code.clone_code()
     local_code.change_local()
 
-sync_code()
+# sync_code()
 change_local()
