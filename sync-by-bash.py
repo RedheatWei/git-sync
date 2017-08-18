@@ -169,7 +169,7 @@ for remote in config:
         sync.down_remote_mirror(group_name,project_name,project_fetch)
         sync.push_mirror_to_local(group_name,project_name,project_fetch)
         sync.update_mirror(group_name,project_name,project_fetch)
-        time.sleep(3)
+        time.sleep(5)
 
 
 
