@@ -48,6 +48,7 @@ class SyncFromRemote(object):
         local_group_save_path = os.path.join(self.local_save_path,group_name)
         self._mkdir_safe(local_group_save_path)
         local_project_save_path = os.path.join(local_group_save_path,project_name)+".git"
+        print os.path.exists(local_project_save_path)
         if os.path.exists(local_project_save_path):
             cmd = "cd %s;git remote update" % local_project_save_path
             print getstatusoutput(cmd)
