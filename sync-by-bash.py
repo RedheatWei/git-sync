@@ -33,6 +33,14 @@ class HttpRequest(object):
         # res = urllib2.urlopen(req)
         res = response.read()
         return json.loads(res)
+    def delete_request(self,url,textmod=None,header_dict=None):
+        if textmod:
+            textmod = urllib.urlencode(textmod)
+        request = urllib2.Request(url, header_dict, textmod)
+        request.get_method = lambda: 'DELETE'
+        response = urllib2.urlopen(request)
+        res = response.read()
+        return json.loads(res)
 class SyncFromRemote(object):
     def __init__(self,private_token,url="10.100.218.203",):
         # self.group = group
@@ -76,8 +84,13 @@ class SyncFromRemote(object):
     def update_mirror(self,group_name,project_name,remote_git_host):
         if self.down_remote_mirror(group_name, project_name,remote_git_host)==0:
             self.push_mirror_to_local(group_name,project_name,remote_git_host)
-    # def del_project(self):
-
+    def del_project(self,group_name,project_name):
+        # local_project_save_path = os.path.join(self.local_save_path,group_name,project_name)+".git"
+        group_id = self._create_group(group_name)
+        project_id = self._check_project_exists(group_id, project_name)
+        if project_id != 0:
+            print self.http_request.delete_request(self.url_projects, header_dict=self.header_dict)
+            # shutil.rmtree(local_project_save_path)
     def _create_project(self, group_name, project_name):
         group_id = self._create_group(group_name)
         project_id = self._check_project_exists(group_id, project_name)
@@ -122,6 +135,12 @@ class SyncFromRemote(object):
         if path and not (os.path.exists(path)):
             os.makedirs(path)
         return path
+    def __del__(self):
+        group_name = sys.argv[1].split("/")[-2].split(":")-1
+        project_name = sys.argv[1].split("/")[-1].split(".")[0]
+        project_fetch = sys.argv[1]
+        self.down_remote_mirror(group_name,project_name,project_fetch)
+        self.push_mirror_to_local(group_name,project_name,project_fetch)
 
 class GetGroupAndProject(object):
     def __init__(self,file_name,repo="git@10.240.205.131:thinkcloud_ci/manifests.git"):
@@ -163,6 +182,43 @@ class GetGroupAndProject(object):
             else:
                 xml_dict[default_remote]['project'].append(project_name)
         return xml_dict
+
+#把本地git库clone
+class CloneToLocal(object):
+    def __init__(self,xml_file,repo="git@10.240.205.131:thinkcloud_ci/manifests.git"):
+        self.need_change=["manifests","building"]
+        self.local_clone_path = "/data/local_code/local_"+xml_file.split(".")[0]
+        self.local_git_host = "10.100.218.203"
+        self.group_name = repo.split("/")[-2].split(":")-1
+
+        # self.local_file_project = local_file_project
+        # self.sync_file_branch = sync_file_branch
+        # self.project = self.getConfig.get_xml_value("project")
+        # self.revision = self.getConfig.get_xml_value("default","revision")
+        # self.local_path = os.path.join(local_code_path,local_code_prefix)+self.revision
+    def clone_code(self):
+        if not os.path.exists(self.local_clone_path):
+            os.mkdirs(self.local_clone_path)
+        for project in self.need_change:
+            cmd = "cd %s;git clone git@%s:%s/%s.git" % (self.local_clone_path,self.local_git_host,self.group_name,project)
+            print getstatusoutput(cmd)
+    def change_local(self):
+        cmd = "find %s | xargs sed 's@10.240.205.131@10.100.218.203@g' -i %s" % self.local_clone_path
+        print getstatusoutput(cmd)
+        for project in self.need_change:
+            git_cmd = "cd %s&&git add .&&git commit -m 'change ip'&&git push origin master"% os.path.join(self.local_clone_path,project)
+            print getstatusoutput(git_cmd)
+        # cmd = "sed -i 's@10.240.205.131@10.100.218.203@g' %s/config-lenovo.yaml" % os.path.join(self.local_path,"building","config")
+        # print cmd
+        # print getstatusoutput(cmd)
+        # cmd = "sed -i 's@10.240.205.131:thinkcloud_ci@10.100.218.203:thinkcloud_test@g' %s/README.md" % os.path.join(self.local_path,"building")
+        # print cmd
+        # print getstatusoutput(cmd)
+        # cmd = "grep  'LenovoOpenStack\*.iso' %s/rebuild-iso.sh || echo '\mv LenovoOpenStack*.iso /opt/ThinkCloud_iso' >> %s/rebuild-iso.sh" % (os.path.join(self.local_path,"building"),os.path.join(self.local_path,"building"))
+        # print cmd
+        # print getstatusoutput(cmd)
+        # git_cmd = "cd %s&&git add .&&git commit -m 'change ip'&&git push origin master" % os.path.join(self.local_path,"building")
+        # print getstatusoutput(git_cmd)
 
 get_config = GetGroupAndProject(sys.argv[2],sys.argv[1])
 config = get_config.get_xml_value()
