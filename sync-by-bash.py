@@ -36,8 +36,7 @@ class HttpRequest(object):
         return json.loads(res)
     def delete_request(self,url,header_dict=None):
         response = requests.delete(url,headers=header_dict)
-        res = response.read()
-        return  json.loads(res)
+        return  response
 class SyncFromRemote(object):
     def __init__(self,private_token,url="10.100.218.203",):
         # self.group = group
@@ -87,7 +86,7 @@ class SyncFromRemote(object):
         group_id = self._create_group(group_name)
         project_id = self._check_project_exists(group_id, project_name)
         if project_id != 0:
-            self.http_request.delete_request(self.url_projects+"/"+str(project_id), header_dict=self.header_dict)
+            print self.http_request.delete_request(self.url_projects+"/"+str(project_id), header_dict=self.header_dict)
             # shutil.rmtree(local_project_save_path)
     def _create_project(self, group_name, project_name):
         group_id = self._create_group(group_name)
