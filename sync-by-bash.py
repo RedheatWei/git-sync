@@ -232,6 +232,6 @@ get_config = GetGroupAndProject(xml_file, repo)
 config = get_config.get_xml_value()
 sync = SyncFromRemote("vXb3ysPaQ6naPUF9z-FM")
 
-# sync_code(config,sync)
+sync_code(config,sync)
 sync_manifests(repo,sync)
 change_local(need_change,xml_file,repo)
