@@ -135,12 +135,6 @@ class SyncFromRemote(object):
         if path and not (os.path.exists(path)):
             os.makedirs(path)
         return path
-    def __del__(self):
-        group_name = sys.argv[1].split("/")[-2].split(":")-1
-        project_name = sys.argv[1].split("/")[-1].split(".")[0]
-        project_fetch = sys.argv[1]
-        self.down_remote_mirror(group_name,project_name,project_fetch)
-        self.push_mirror_to_local(group_name,project_name,project_fetch)
 
 class GetGroupAndProject(object):
     def __init__(self,file_name,repo="git@10.240.205.131:thinkcloud_ci/manifests.git"):
@@ -191,11 +185,12 @@ class CloneToLocal(object):
         self.local_git_host = "10.100.218.203"
         self.group_name = repo.split("/")[-2].split(":")[-1]
         self.remote_host = repo.split("@")[-1].split(":")[0]
-
+        self.sync = SyncFromRemote("vXb3ysPaQ6naPUF9z-FM")
     def clone_code(self):
         if not os.path.exists(self.local_clone_path):
             os.makedirs(self.local_clone_path)
         for project in self.need_change:
+            self.sync.del_project(self.group_name,project)
             cmd = "cd %s;git clone git@%s:%s/%s.git" % (self.local_clone_path,self.local_git_host,self.group_name,project)
             print getstatusoutput(cmd)
     def change_local(self):
@@ -204,31 +199,31 @@ class CloneToLocal(object):
         for project in self.need_change:
             git_cmd = "cd %s&&git add .&&git commit -m 'change ip'&&git push origin master"% os.path.join(self.local_clone_path,project)
             print getstatusoutput(git_cmd)
-        # cmd = "sed -i 's@10.240.205.131@10.100.218.203@g' %s/config-lenovo.yaml" % os.path.join(self.local_path,"building","config")
-        # print cmd
-        # print getstatusoutput(cmd)
-        # cmd = "sed -i 's@10.240.205.131:thinkcloud_ci@10.100.218.203:thinkcloud_test@g' %s/README.md" % os.path.join(self.local_path,"building")
-        # print cmd
-        # print getstatusoutput(cmd)
-        # cmd = "grep  'LenovoOpenStack\*.iso' %s/rebuild-iso.sh || echo '\mv LenovoOpenStack*.iso /opt/ThinkCloud_iso' >> %s/rebuild-iso.sh" % (os.path.join(self.local_path,"building"),os.path.join(self.local_path,"building"))
-        # print cmd
-        # print getstatusoutput(cmd)
-        # git_cmd = "cd %s&&git add .&&git commit -m 'change ip'&&git push origin master" % os.path.join(self.local_path,"building")
-        # print getstatusoutput(git_cmd)
+repo = sys.argv[1]
+xml_file = sys.argv[2]
+def sync_manifests(sync):
+    group_name = repo.split("/")[-2].split(":")-1
+    project_name = repo.split("/")[-1].split(".")[0]
+    project_fetch = repo
+    sync.down_remote_mirror(group_name,project_name,project_fetch)
+    sync.push_mirror_to_local(group_name,project_name,project_fetch)
+def sync_code():
+    get_config = GetGroupAndProject(xml_file,repo)
+    config = get_config.get_xml_value()
+    sync = SyncFromRemote("vXb3ysPaQ6naPUF9z-FM")
+    for remote in config:
+        group_name = config[remote]["fetch"].split("/")[-1]
+        project_fetch = config[remote]["fetch"].split("@")[-1].split("/")[0]
+        for project_name in config[remote]["project"]:
+            if sync.down_remote_mirror(group_name,project_name,project_fetch) ==0:
+                sync.push_mirror_to_local(group_name,project_name,project_fetch)
+            sync.update_mirror(group_name,project_name,project_fetch)
+            time.sleep(5)
+    sync_manifests(sync)
+def change_local():
+    local_code = CloneToLocal(xml_file,repo)
+    local_code.clone_code()
+    local_code.change_local()
 
-# get_config = GetGroupAndProject(sys.argv[2],sys.argv[1])
-# config = get_config.get_xml_value()
-# sync = SyncFromRemote("vXb3ysPaQ6naPUF9z-FM")
-# for remote in config:
-#     group_name = config[remote]["fetch"].split("/")[-1]
-#     project_fetch = config[remote]["fetch"].split("@")[-1].split("/")[0]
-#     for project_name in config[remote]["project"]:
-#         if sync.down_remote_mirror(group_name,project_name,project_fetch) ==0:
-#             sync.push_mirror_to_local(group_name,project_name,project_fetch)
-#         sync.update_mirror(group_name,project_name,project_fetch)
-#         time.sleep(5)
-
-local_code = CloneToLocal(sys.argv[2],sys.argv[1])
-local_code.clone_code()
-local_code.change_local()
-
+sync_code()
+change_local()
