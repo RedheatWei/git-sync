@@ -220,17 +220,17 @@ class CloneToLocal(object):
         # git_cmd = "cd %s&&git add .&&git commit -m 'change ip'&&git push origin master" % os.path.join(self.local_path,"building")
         # print getstatusoutput(git_cmd)
 
-get_config = GetGroupAndProject(sys.argv[2],sys.argv[1])
-config = get_config.get_xml_value()
-sync = SyncFromRemote("vXb3ysPaQ6naPUF9z-FM")
-for remote in config:
-    group_name = config[remote]["fetch"].split("/")[-1]
-    project_fetch = config[remote]["fetch"].split("@")[-1].split("/")[0]
-    for project_name in config[remote]["project"]:
-        if sync.down_remote_mirror(group_name,project_name,project_fetch) ==0:
-            sync.push_mirror_to_local(group_name,project_name,project_fetch)
-        sync.update_mirror(group_name,project_name,project_fetch)
-        time.sleep(5)
+# get_config = GetGroupAndProject(sys.argv[2],sys.argv[1])
+# config = get_config.get_xml_value()
+# sync = SyncFromRemote("vXb3ysPaQ6naPUF9z-FM")
+# for remote in config:
+#     group_name = config[remote]["fetch"].split("/")[-1]
+#     project_fetch = config[remote]["fetch"].split("@")[-1].split("/")[0]
+#     for project_name in config[remote]["project"]:
+#         if sync.down_remote_mirror(group_name,project_name,project_fetch) ==0:
+#             sync.push_mirror_to_local(group_name,project_name,project_fetch)
+#         sync.update_mirror(group_name,project_name,project_fetch)
+#         time.sleep(5)
 
 local_code = CloneToLocal(sys.argv[2],sys.argv[1])
 local_code.clone_code()
