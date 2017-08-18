@@ -58,7 +58,7 @@ class SyncFromRemote(object):
         cmd = "cd %s;git clone --mirror git@%s:%s/%s.git" % (local_group_save_path,remote_git_host,group_name,project_name)
         # cmd = ["cd",local_group_save_path,";","git","clone","--mirror","git@%s:%s/%s.git" % (remote_git_host,group_name,project_name)]
         print cmd
-        getstatusoutput(cmd)
+        print getstatusoutput(cmd)
         # shell = subprocess.Popen(cmd,subprocess.PIPE)
         # shell.wait()
     def push_mirror_to_local(self,group_name,project_name,remote_git_host):
@@ -82,6 +82,7 @@ class SyncFromRemote(object):
         else:
             textmod = {"name": project_name, "namespace_id": group_id}
             project = self.http_request.post_request(self.url_projects, textmod, self.header_dict)
+            print project
             if project[0]['id']:
                 return project[0]['id']
             else:
