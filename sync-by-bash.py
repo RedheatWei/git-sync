@@ -177,25 +177,29 @@ class GetGroupAndProject(object):
 
 #把本地git库clone
 class CloneToLocal(object):
-    def __init__(self,xml_file,repo="git@10.240.205.131:thinkcloud_ci/manifests.git"):
-        self.need_change=["manifests","building"]
+    def __init__(self,need_change,xml_file,repo="git@10.240.205.131:thinkcloud_ci/manifests.git"):
         self.local_clone_path = "/data/local_code/local_"+xml_file.split(".")[0]
         self.local_git_host = "10.100.218.203"
         self.group_name = repo.split("/")[-2].split(":")[-1]
         self.remote_host = repo.split("@")[-1].split(":")[0]
         self.sync = SyncFromRemote("vXb3ysPaQ6naPUF9z-FM")
+        self.need_change=need_change
     def clone_code(self):
         if not os.path.exists(self.local_clone_path):
             os.makedirs(self.local_clone_path)
         for project in self.need_change:
             self.sync.del_project(self.group_name,project)
+            project_path = os.path.join(self.local_clone_path,project)
+            if os.path.exists(project_path):
+                shutil.rmtree(project_path)
             cmd = "cd %s;git clone git@%s:%s/%s.git" % (self.local_clone_path,self.local_git_host,self.group_name,project)
             print getstatusoutput(cmd)
     def change_local(self):
-        cmd = "find %s | xargs sed 's@%s@%s@g' -i" % (self.local_clone_path,self.remote_host,self.local_git_host)
-        print getstatusoutput(cmd)
-        for project in self.need_change:
-            git_cmd = "cd %s&&git add .&&git commit -m 'change ip'&&git push origin master"% os.path.join(self.local_clone_path,project)
+        for change in self.need_change:
+            for file_name in self.need_change[change]:
+                cmd = "sed 's@%s@%s@g' -i %s" % (self.remote_host,self.local_git_host,os.path.join(self.local_clone_path,change,file_name))
+                print getstatusoutput(cmd)
+            git_cmd = "cd %s&&git add .&&git commit -m 'change ip'&&git push origin master"% os.path.join(self.local_clone_path,change)
             print getstatusoutput(git_cmd)
 
 def sync_manifests(repo,sync):
@@ -214,13 +218,15 @@ def sync_code(config,sync):
             sync.update_mirror(group_name,project_name,project_fetch)
             time.sleep(5)
 
-def change_local(xml_file,repo):
-    local_code = CloneToLocal(xml_file,repo)
+def change_local(need_change,xml_file,repo):
+    local_code = CloneToLocal(need_change,xml_file,repo)
     local_code.clone_code()
     local_code.change_local()
 
+
 repo = sys.argv[1]
 xml_file = sys.argv[2]
+need_change = {"manifests":[xml_file], "building":["config/config-lenovo.yaml","README.md"]}
 
 get_config = GetGroupAndProject(xml_file, repo)
 config = get_config.get_xml_value()
@@ -228,4 +234,4 @@ sync = SyncFromRemote("vXb3ysPaQ6naPUF9z-FM")
 
 # sync_code(config,sync)
 sync_manifests(repo,sync)
-change_local(xml_file,repo)
+change_local(need_change,xml_file,repo)
