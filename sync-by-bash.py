@@ -5,7 +5,7 @@ Created on '2017/8/17 10:40'
 Email: qjyyn@qq.com
 @author: Redheat
 '''
-import  urllib,urllib2,json,os,subprocess,shutil,sys
+import  urllib,urllib2,json,os,shutil,sys,time
 import xml.dom.minidom
 from gittle import Gittle
 from commands import getstatusoutput
@@ -169,6 +169,7 @@ for remote in config:
         sync.down_remote_mirror(group_name,project_name,project_fetch)
         sync.push_mirror_to_local(group_name,project_name,project_fetch)
         sync.update_mirror(group_name,project_name,project_fetch)
+        time.sleep(3)
 
 
 
