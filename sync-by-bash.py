@@ -76,7 +76,6 @@ class SyncFromRemote(object):
         self.push_mirror_to_local(group_name,project_name,remote_git_host)
     def _create_project(self, group_name, project_name):
         group_id = self._create_group(group_name)
-        # if group_id != 0:
         project_id = self._check_project_exists(group_id, project_name)
         if project_id == 0:
             textmod = {"name": project_name, "namespace_id": group_id}
@@ -108,7 +107,8 @@ class SyncFromRemote(object):
                 return group['id']
         return 0
     def _check_project_exists(self,group_id,project_name):
-        projects = self.http_request.get_request(self.url_groups+"/"+str(group_id)+"/projects",header_dict=self.header_dict)
+        textmod = {"search":project_name}
+        projects = self.http_request.get_request(self.url_groups+"/"+str(group_id)+"/projects",textmod,header_dict=self.header_dict)
         for project in projects:
             if project['name'] == project_name:
                 return project['id']
