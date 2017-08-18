@@ -50,7 +50,7 @@ class SyncFromRemote(object):
         local_project_save_path = os.path.join(local_group_save_path,project_name)+".git"
         if os.path.exists(local_project_save_path):
             cmd = "cd %s;git remote update" % local_project_save_path
-            print getstatusoutput(cmd)
+            print getstatusoutput(cmd)[1]
             # cmd = ["cd",local_project_save_path,";","git remote update"]
             # print cmd
             # shell = subprocess.Popen(cmd,subprocess.PIPE)
@@ -58,7 +58,7 @@ class SyncFromRemote(object):
             #     shutil.rmtree(local_project_save_path)
         cmd = "cd %s;git clone --mirror git@%s:%s/%s.git" % (local_group_save_path,remote_git_host,group_name,project_name)
         # cmd = ["cd",local_group_save_path,";","git","clone","--mirror","git@%s:%s/%s.git" % (remote_git_host,group_name,project_name)]
-        print getstatusoutput(cmd)
+        print getstatusoutput(cmd)[1]
         # shell = subprocess.Popen(cmd,subprocess.PIPE)
         # shell.wait()
     def push_mirror_to_local(self,group_name,project_name,remote_git_host):
@@ -68,7 +68,7 @@ class SyncFromRemote(object):
             self.down_remote_mirror(group_name,project_name,remote_git_host)
         # cmd = ["cd", local_project_save_path, ";","git push --mirror git@%s:%s/%s.git" % (self.local_git_host, group_name, project_name)]
         cmd = "cd %s;git push --mirror git@%s:%s/%s.git" % (local_project_save_path,self.local_git_host, group_name, project_name)
-        print getstatusoutput(cmd)
+        print getstatusoutput(cmd)[1]
         # shell = subprocess.Popen(cmd, subprocess.PIPE)
         # shell.wait()
 
@@ -166,9 +166,9 @@ for remote in config:
     group_name = config[remote]["fetch"].split("/")[-1]
     project_fetch = config[remote]["fetch"].split("@")[-1].split("/")[0]
     for project_name in config[remote]["project"]:
-        # sync.down_remote_mirror(group_name,project_name,project_fetch)
+        sync.down_remote_mirror(group_name,project_name,project_fetch)
         sync.push_mirror_to_local(group_name,project_name,project_fetch)
-        # sync.update_mirror(group_name,project_name,project_fetch)
+        sync.update_mirror(group_name,project_name,project_fetch)
 
 
 
