@@ -91,13 +91,13 @@ class SyncFromRemote(object):
         if self.down_remote_mirror(group_name, project_name,remote_git_host)==0:
             self.push_mirror_to_local(group_name,project_name,remote_git_host)
     def del_project(self,group_name,project_name,remote_git_host):
-        # local_project_save_path = os.path.join(self.local_save_path,group_name,project_name)+".git"
+        local_project_save_path = os.path.join(self.local_save_path,group_name,project_name)+".git"
         print "DELETE project %s" % project_name
         group_id = self._create_group(group_name)
         project_id = self._check_project_exists(group_id, project_name)
         if project_id != 0:
             print self.http_request.delete_request(self.url_projects+"/"+str(project_id), header_dict=self.header_dict)
-            # shutil.rmtree(local_project_save_path)
+            shutil.rmtree(local_project_save_path)
         self.update_mirror(group_name,project_name,remote_git_host)
     def _create_project(self, group_name, project_name):
         group_id = self._create_group(group_name)
