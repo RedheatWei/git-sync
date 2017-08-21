@@ -74,7 +74,11 @@ class SyncFromRemote(object):
         # cmd = ["cd", local_project_save_path, ";","git push --mirror git@%s:%s/%s.git" % (self.local_git_host, group_name, project_name)]
         cmd = "cd %s;git push --mirror git@%s:%s/%s.git" % (local_project_save_path,self.local_git_host, group_name, project_name)
         print cmd
-        print "PUSH:"+getstatusoutput(cmd)[1]
+        stat = getstatusoutput(cmd)
+        print "PUSH:"+stat[1]
+        if stat[0] != 0:
+            self.del_project(group_name,project_name,remote_git_host)
+            self.update_mirror(group_name,project_name,remote_git_host)
         # shell = subprocess.Popen(cmd, subprocess.PIPE)
         # shell.wait()
     def update_mirror(self,group_name,project_name,remote_git_host):
@@ -223,7 +227,6 @@ def change_local(need_change,xml_file,repo):
     local_code = CloneToLocal(need_change,xml_file,repo)
     local_code.clone_code()
     local_code.change_local()
-
 
 repo = sys.argv[1]
 xml_file = sys.argv[2]
