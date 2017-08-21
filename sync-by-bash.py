@@ -48,6 +48,7 @@ class SyncFromRemote(object):
         self.local_save_path = "/data/mirror_remote"
         # self.remote_git_host = remote_git_host
         self.local_git_host = "10.100.218.203"
+        self.push_count = 0
     def down_remote_mirror(self,group_name,project_name,remote_git_host):
         local_group_save_path = os.path.join(self.local_save_path,group_name)
         self._mkdir_safe(local_group_save_path)
@@ -77,8 +78,13 @@ class SyncFromRemote(object):
         stat = getstatusoutput(cmd)
         print "PUSH:"+stat[1]
         if stat[0] != 0:
-            self.del_project(group_name,project_name,remote_git_host)
-            self.update_mirror(group_name,project_name,remote_git_host)
+            if self.push_count<3:
+                self.push_count+=1
+                self.del_project(group_name,project_name,remote_git_host)
+                self.update_mirror(group_name,project_name,remote_git_host)
+            else:
+                sys.exit(1)
+
         # shell = subprocess.Popen(cmd, subprocess.PIPE)
         # shell.wait()
     def update_mirror(self,group_name,project_name,remote_git_host):
