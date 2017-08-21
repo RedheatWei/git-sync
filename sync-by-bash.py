@@ -77,13 +77,13 @@ class SyncFromRemote(object):
         print cmd
         stat = getstatusoutput(cmd)
         print "PUSH:"+stat[1]
-        # if stat[0] != 0:
-        #     if self.push_count<3:
-        #         self.push_count+=1
-        #         self.del_project(group_name,project_name,remote_git_host)
-        #         self.update_mirror(group_name,project_name,remote_git_host)
-        #     else:
-        #         sys.exit(1)
+        if stat[0] != 0:
+            if self.push_count<3:
+                self.push_count+=1
+                self.del_project(group_name,project_name,remote_git_host)
+                self.update_mirror(group_name,project_name,remote_git_host)
+            # else:
+            #     sys.exit(1)
 
         # shell = subprocess.Popen(cmd, subprocess.PIPE)
         # shell.wait()
