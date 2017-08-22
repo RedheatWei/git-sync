@@ -227,7 +227,7 @@ def sync_code(config,sync):
                 if sync.down_remote_mirror(group_name,project_name,project_fetch) ==0:
                     sync.push_mirror_to_local(group_name,project_name,project_fetch)
                 sync.update_mirror(group_name,project_name,project_fetch)
-                time.sleep(10)
+                time.sleep(5)
 
 def change_local(need_change,xml_file,repo):
     local_code = CloneToLocal(need_change,xml_file,repo)
