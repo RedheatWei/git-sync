@@ -242,7 +242,7 @@ project_fetch = repo.split("@")[-1].split("/")[0].split(":")[0]
 
 get_config = GetGroupAndProject(xml_file, repo)
 config = get_config.get_xml_value()
-sync = SyncFromRemote("vXb3ysPaQ6naPUF9z-FM")
+sync = SyncFromRemote("dFdpbDZh3UHhYz2LN-4z")
 group_name = repo.split("/")[-2].split(":")[-1]
 for change in need_change:
     sync.del_project(group_name, change,project_fetch)
