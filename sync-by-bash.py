@@ -69,7 +69,7 @@ class SyncFromRemote(object):
         return stat[0]
     def push_mirror_to_local(self,group_name,project_name,remote_git_host):
         local_project_save_path = os.path.join(self.local_save_path,group_name,project_name)+".git"
-        print self._create_project(group_name,project_name)
+        self._create_project(group_name,project_name)
         if not os.path.exists(local_project_save_path):
             self.down_remote_mirror(group_name,project_name,remote_git_host)
         # cmd = ["cd", local_project_save_path, ";","git push --mirror git@%s:%s/%s.git" % (self.local_git_host, group_name, project_name)]
