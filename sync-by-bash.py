@@ -116,8 +116,8 @@ class SyncFromRemote(object):
         if group_id == 0:
             textmod = {"name": group_name, "path": group_name,"description":group_name}
             group = self.http_request.post_request(self.url_groups, textmod, self.header_dict)
-            if group[0]['id']:
-                return group[0]['id']
+            if group['id']:
+                return group['id']
             else:
                 print "group %s create error,please check." % group_name
                 sys.exit(1)
