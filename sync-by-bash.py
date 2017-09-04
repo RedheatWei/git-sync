@@ -48,7 +48,7 @@ class SyncFromRemote(object):
         self.local_save_path = "/data/mirror_remote"
         # self.remote_git_host = remote_git_host
         self.local_git_host = "10.100.218.203"
-        self.push_count = {}
+        # self.push_count = 0
     def down_remote_mirror(self,group_name,project_name,remote_git_host):
         local_group_save_path = os.path.join(self.local_save_path,group_name)
         self._mkdir_safe(local_group_save_path)
@@ -251,21 +251,18 @@ def change_local(need_change,xml_file,repo):
     local_code.change_local()
 
 repo = sys.argv[1]
-if len(sys.argv)==3:
-    # repo = sys.argv[1]
-    xml_file = sys.argv[2]
-    need_change = {"manifests":[xml_file], "building":["config/config-lenovo.yaml","README.md"]}
-    project_fetch = repo.split("@")[-1].split("/")[0].split(":")[0]
+# repo = sys.argv[1]
+xml_file = sys.argv[2]
+need_change = {"manifests":[xml_file], "building":["config/config-lenovo.yaml","README.md"]}
+project_fetch = repo.split("@")[-1].split("/")[0].split(":")[0]
 
 
-    get_config = GetGroupAndProject(xml_file, repo)
-    config = get_config.get_xml_value()
-    sync = SyncFromRemote("dFdpbDZh3UHhYz2LN-4z")
-    group_name = repo.split("/")[-2].split(":")[-1]
-    for change in need_change:
-        sync.del_project(group_name, change,project_fetch)
-    change_local(need_change,xml_file,repo)
-    # sync_manifests(repo, sync)
-    sync_code(config,sync)
-else:
-    GetGroupAndProject
+get_config = GetGroupAndProject(xml_file, repo)
+config = get_config.get_xml_value()
+sync = SyncFromRemote("dFdpbDZh3UHhYz2LN-4z")
+group_name = repo.split("/")[-2].split(":")[-1]
+for change in need_change:
+    sync.del_project(group_name, change,project_fetch)
+change_local(need_change,xml_file,repo)
+# sync_manifests(repo, sync)
+sync_code(config,sync)
