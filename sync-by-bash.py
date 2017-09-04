@@ -48,7 +48,7 @@ class SyncFromRemote(object):
         self.local_save_path = "/data/mirror_remote"
         # self.remote_git_host = remote_git_host
         self.local_git_host = "10.100.218.203"
-        self.push_count = 0
+        self.push_count = {}
     def down_remote_mirror(self,group_name,project_name,remote_git_host):
         local_group_save_path = os.path.join(self.local_save_path,group_name)
         self._mkdir_safe(local_group_save_path)
@@ -78,8 +78,8 @@ class SyncFromRemote(object):
         stat = getstatusoutput(cmd)
         print "PUSH:"+stat[1]
         if stat[0] != 0:
-            if self.push_count<3:
-                self.push_count+=1
+            if self.push_count[project_name]<3:
+                self.push_count[project_name]+=1
                 self.del_project(group_name,project_name,remote_git_host)
                 self.update_mirror(group_name,project_name,remote_git_host)
             # else:
@@ -164,6 +164,22 @@ class GetGroupAndProject(object):
         else:
             print "clone %s to %s successfully!" % (self.repo, self.tmp_path)
             return xml.dom.minidom.parse(os.path.join(self.tmp_path, self.file_name))
+    def getFiles(self):
+        try:
+            if os.path.exists(self.tmp_path):
+                shutil.rmtree(self.tmp_path)
+            Gittle.clone(self.repo, self.tmp_path)
+        except Exception, e:
+            print e
+            sys.exit(1)
+        else:
+            print "clone %s to %s successfully!" % (self.repo, self.tmp_path)
+            ret = []
+            for root, dirs, files in os.walk(self.tmp_path):
+                for filespath in files:
+                    ret.append(os.path.join(root, filespath))
+            return ret
+
     def get_xml_value(self):
         config_obj = self._get_name()
         doc = config_obj.documentElement
@@ -235,17 +251,21 @@ def change_local(need_change,xml_file,repo):
     local_code.change_local()
 
 repo = sys.argv[1]
-xml_file = sys.argv[2]
-need_change = {"manifests":[xml_file], "building":["config/config-lenovo.yaml","README.md"]}
-project_fetch = repo.split("@")[-1].split("/")[0].split(":")[0]
+if len(sys.argv)==3:
+    # repo = sys.argv[1]
+    xml_file = sys.argv[2]
+    need_change = {"manifests":[xml_file], "building":["config/config-lenovo.yaml","README.md"]}
+    project_fetch = repo.split("@")[-1].split("/")[0].split(":")[0]
 
 
-get_config = GetGroupAndProject(xml_file, repo)
-config = get_config.get_xml_value()
-sync = SyncFromRemote("dFdpbDZh3UHhYz2LN-4z")
-group_name = repo.split("/")[-2].split(":")[-1]
-for change in need_change:
-    sync.del_project(group_name, change,project_fetch)
-change_local(need_change,xml_file,repo)
-# sync_manifests(repo, sync)
-sync_code(config,sync)
+    get_config = GetGroupAndProject(xml_file, repo)
+    config = get_config.get_xml_value()
+    sync = SyncFromRemote("dFdpbDZh3UHhYz2LN-4z")
+    group_name = repo.split("/")[-2].split(":")[-1]
+    for change in need_change:
+        sync.del_project(group_name, change,project_fetch)
+    change_local(need_change,xml_file,repo)
+    # sync_manifests(repo, sync)
+    sync_code(config,sync)
+else:
+    GetGroupAndProject
