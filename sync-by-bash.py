@@ -103,7 +103,7 @@ class SyncFromRemote(object):
     def _create_project(self, group_name, project_name):
         group_id = self._create_group(group_name)
         project_id = self._check_project_exists(group_id, project_name)
-        print "PROJECT ID IS "+project_id
+        print "PROJECT NAME IS %s. PROJECT ID IS %s" % (project_name,project_id)
         if project_id == 0:
             textmod = {"name": project_name, "namespace_id": group_id}
             project = self.http_request.post_request(self.url_projects, textmod, self.header_dict)
