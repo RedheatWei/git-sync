@@ -97,11 +97,13 @@ class SyncFromRemote(object):
         project_id = self._check_project_exists(group_id, project_name)
         if project_id != 0:
             print self.http_request.delete_request(self.url_projects+"/"+str(project_id), header_dict=self.header_dict)
+            print self._create_project(group_name,project_name)
             shutil.rmtree(local_project_save_path)
         self.update_mirror(group_name,project_name,remote_git_host)
     def _create_project(self, group_name, project_name):
         group_id = self._create_group(group_name)
         project_id = self._check_project_exists(group_id, project_name)
+        print "PROJECT ID IS "+project_id
         if project_id == 0:
             textmod = {"name": project_name, "namespace_id": group_id}
             project = self.http_request.post_request(self.url_projects, textmod, self.header_dict)
