@@ -139,6 +139,7 @@ class SyncFromRemote(object):
         projects = self.http_request.get_request(self.url_groups+"/"+str(group_id)+"/projects",textmod,header_dict=self.header_dict)
         if len(projects) != 0:
             for project in projects:
+                print project
                 if project['name'] == project_name:
                     return project['id']
         return 0
