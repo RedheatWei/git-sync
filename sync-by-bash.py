@@ -108,7 +108,11 @@ class SyncFromRemote(object):
             textmod = {"name": project_name, "namespace_id": group_id}
             project = self.http_request.post_request(self.url_projects, textmod, self.header_dict)
             if project_name=="manifests":
-                project = self.http_request.post_request(self.url_projects, textmod, self.header_dict)
+                try:
+                    project = self.http_request.post_request(self.url_projects, textmod, self.header_dict)
+                except Exception,e:
+                    print e
+                    pass
             print "CREATE PROJECT "+project["web_url"]
             if project['id']:
                 return project['id']
