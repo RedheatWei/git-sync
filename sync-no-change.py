@@ -237,12 +237,12 @@ class CloneToLocal(object):
             git_cmd = "cd %s&&git add .&&git commit -m 'change ip'&&git push origin master"% os.path.join(self.local_clone_path,change)
             print getstatusoutput(git_cmd)
 
-# def sync_manifests(repo,sync):
-#     group_name = repo.split("/")[-2].split(":")[-1]
-#     project_name = repo.split("/")[-1].split(".")[0]
-#     project_fetch = repo.split("@")[-1].split("/")[0].split(":")[0]
-#     sync.down_remote_mirror(group_name,project_name,project_fetch)
-#     sync.push_mirror_to_local(group_name,project_name,project_fetch)
+def sync_manifests(repo,sync):
+    group_name = repo.split("/")[-2].split(":")[-1]
+    project_name = repo.split("/")[-1].split(".")[0]
+    project_fetch = repo.split("@")[-1].split("/")[0].split(":")[0]
+    sync.down_remote_mirror(group_name,project_name,project_fetch)
+    sync.push_mirror_to_local(group_name,project_name,project_fetch)
 def sync_code(config,sync):
     for remote in config:
         group_name = config[remote]["fetch"].split("/")[-1]
@@ -273,5 +273,5 @@ group_name = repo.split("/")[-2].split(":")[-1]
 # for change in need_change:
 #     sync.del_project(group_name, change,project_fetch)
 # change_local(need_change,xml_file,repo)
-# sync_manifests(repo, sync)
+sync_manifests(repo, sync)
 sync_code(config,sync)
