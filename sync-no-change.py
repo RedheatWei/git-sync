@@ -154,7 +154,7 @@ class SyncFromRemote(object):
         return path
 
 class GetGroupAndProject(object):
-    def __init__(self,file_name,repo="git@10.240.205.131:thinkcloud_ci/manifests.git"):
+    def __init__(self,file_name,repo="git@10.240.200.5:thinkcloud_ci/manifests.git"):
         self.repo = repo
         self.file_name = file_name
         self.sync_tmp_file = "/tmp/sync_file"  # 远程仓库manifests临时存放位置
@@ -212,7 +212,7 @@ class GetGroupAndProject(object):
 
 #把本地git库clone
 class CloneToLocal(object):
-    def __init__(self,need_change,xml_file,repo="git@10.240.205.131:thinkcloud_ci/manifests.git"):
+    def __init__(self,need_change,xml_file,repo="git@10.240.200.5:thinkcloud_ci/manifests.git"):
         self.local_clone_path = "/data/local_code/local_"+xml_file.split(".")[0]
         self.local_git_host = "10.100.218.203"
         self.group_name = repo.split("/")[-2].split(":")[-1]
