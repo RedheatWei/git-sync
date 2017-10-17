@@ -199,8 +199,6 @@ class GetGroupAndProject(object):
         for remote in remote_objs:
             xml_dict[remote.getAttribute('name')] = {}
             xml_dict[remote.getAttribute('name')]["fetch"] = remote.getAttribute('fetch').replace("10.240.205.131","git.tclab.lenovo.com")
-            if xml_dict[remote.getAttribute('name')]["fetch"]=='..':
-                xml_dict[remote.getAttribute('name')]["fetch"] = "ssh://git@git.tclab.lenovo.com/thinkcloud_sds"
             xml_dict[remote.getAttribute('name')]["review"] = remote.getAttribute('review')
             xml_dict[remote.getAttribute('name')]["project"] = []
         for project in project_objs:
